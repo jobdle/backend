@@ -26,12 +26,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   async signIn(@Request() req): Promise<any> {
-    return this.authService.login(req.user);
+    return await this.authService.login(req.user);
   }
 
   @Post('signup')
   async signUp(@Body() data: any): Promise<any> {
-    return this.userService.createUserAccount(data);
+    return await this.userService.createUserAccount(data);
   }
 
   @UseGuards(JwtAuthGuard)

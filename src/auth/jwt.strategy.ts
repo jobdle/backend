@@ -1,6 +1,7 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
+import { platform } from 'os';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -15,9 +16,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log('2');
-    console.log(payload);
-    console.log({ userId: payload.sub, username: payload.username });
-    return await { userId: payload.sub, username: payload.username };
+    console.log({
+      userId: payload.sub,
+      username: payload.username,
+      role: payload.role,
+    });
+    return await {
+      userId: payload.sub,
+      username: payload.username,
+      role: payload.role,
+    };
   }
 }

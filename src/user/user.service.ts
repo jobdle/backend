@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from '../schema/user.schema';
+import { User } from '../model/user.model';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -14,7 +16,7 @@ export class UserService {
     return await this.userModel.findOne({ username: username });
   }
 
-  async createUserAccount(data: any): Promise<any> {
+  async createUserAccount(data: User): Promise<any> {
     try {
       console.log(data);
       console.log('register');
@@ -22,10 +24,12 @@ export class UserService {
       if (!(firstname && lastname && username && password && email)) {
         return null;
       }
-      console.log('a');
+      data.role = 'user';
+      const saltOrRounds = 10;
+      const hash = await bcrypt.hash(password, saltOrRounds);
+      data.password = hash;
       const user = await new this.userModel(data);
       return await user.save();
-      return null;
     } catch (e) {
       console.log('Error at createUserAccount function in user.service');
       console.log(e);
