@@ -19,10 +19,11 @@ export class WorkService {
     return await this.workModel.findOne({ userId: userId, _id: id });
   }
 
-  async newWork(userId: string, body: any): Promise<any> {
+  async newWork(user: any, body: any): Promise<any> {
     try {
       console.log(1);
-      body['userId'] = userId;
+      body['userId'] = await user.userId;
+      body['fullname'] = await (user.firstname + ' ' + user.lastname);
       console.log(body);
       const work = await new this.workModel(body);
       return await work.save();

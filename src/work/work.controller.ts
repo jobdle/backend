@@ -44,7 +44,7 @@ export class WorkController {
   @Post()
   @HttpCode(201)
   async postWork(@Request() req, @Body() body: any): Promise<any> {
-    return await this.workService.newWork(req.user.userId, body);
+    return await this.workService.newWork(req.user, body);
   }
 
   // @Post()

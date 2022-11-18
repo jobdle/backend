@@ -28,6 +28,8 @@ export class AuthService {
       username: user.username,
       sub: user._id,
       role: user.role,
+      firstname: user.firstname,
+      lastname: user.lastname,
     };
     console.log(payload);
     return await {
