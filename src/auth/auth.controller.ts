@@ -33,10 +33,4 @@ export class AuthController {
   async signUp(@Body() data: any): Promise<any> {
     return await this.userService.createUserAccount(data);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getProfile(@Request() req) {
-    return await this.userService.getOneUserData(req.user.username);
-  }
 }
