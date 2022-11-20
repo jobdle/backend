@@ -9,6 +9,8 @@ export const workSchema = new mongoose.Schema({
   note: String,
   location: String,
   fullname: String,
+  status: String,
+  date: String,
 });
 
 export interface Work {
@@ -20,4 +22,6 @@ export interface Work {
   note: string;
   location: string;
   fullname: string;
+  status: string;
+  date: string;
 }
