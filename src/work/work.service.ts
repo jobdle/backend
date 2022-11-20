@@ -29,7 +29,9 @@ export class WorkService {
   async newWork(user: any, body: any): Promise<any> {
     try {
       body['userId'] = await user.userId;
-      body['fullname'] = await (user.firstname + ' ' + user.lastname);
+      body['fullname'] = await ((await user.firstname) +
+        ' ' +
+        (await user.lastname));
       body['status'] = await 'new';
       console.log(body);
       const work = await new this.workModel(body);
