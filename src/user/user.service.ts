@@ -37,8 +37,8 @@ export class UserService {
     }
   }
 
-  async getOneUserData(username: any): Promise<any> {
-    const user = await this.userModel.findOne({ username: username });
+  async getOneUserData(userId: any): Promise<any> {
+    const user = await this.userModel.findOne({ _id: userId });
     return await {
       firstname: user.firstname,
       lastname: user.lastname,

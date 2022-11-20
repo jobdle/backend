@@ -13,6 +13,6 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
-    return await this.userService.getOneUserData(req.user.username);
+    return await this.userService.getOneUserData(req.user.userId);
   }
 }
