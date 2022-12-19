@@ -21,28 +21,38 @@ export class WorkController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAll(@Request() req, @Query('status') status: string): Promise<any> {
-    return await this.workService.findAll(req.user.userId, status);
+  async getAll(
+    @Request() req,
+    @Query('status') status: string,
+    @Query('page') page: number,
+    @Query('customerId') customerId: string,
+  ): Promise<any> {
+    page = await Number(page);
+    status = status === undefined ? 'new' : status;
+    page = await (page > 0 ? page : 1);
+    customerId = customerId === undefined ? 'all' : customerId;
+    return await this.workService.findAll(req.user, status, page, customerId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Request() req, @Param('id') id: string): Promise<any> {
-    return await this.workService.findOne(req.user.userId, id);
+    return await this.workService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(201)
   async postWork(@Request() req, @Body() body: any): Promise<any> {
+    console.log('hi');
     return await this.workService.newWork(req.user, body);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Delete()
-  // async deleteOne(@Request() req): Promise<any> {
-  //   return await this.workService.getHello();
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async softDeleteOne(@Request() req, @Param('id') id: string): Promise<any> {
+    return await this.workService.softDelete(id);
+  }
 
   // @UseGuards(JwtAuthGuard)
   // @Put()

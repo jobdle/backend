@@ -7,7 +7,17 @@ import { WorkService } from './work.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'Work', schema: workSchema }]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: 'Work',
+        useFactory: () => {
+          const schema = workSchema;
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          schema.plugin(require('mongoose-paginate-v2'));
+          return schema;
+        },
+      },
+    ]),
     WorkModule,
   ],
   controllers: [WorkController],

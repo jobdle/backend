@@ -1,38 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { PaginateModel } from 'mongoose';
+import 'mongoose-paginate-v2';
 import { Work } from 'src/model/work.model';
 
 @Injectable()
 export class WorkService {
-  constructor(@InjectModel('Work') private readonly workModel: Model<Work>) {}
+  constructor(
+    @InjectModel('Work') private readonly workModel: PaginateModel<Work>,
+  ) {}
   getHello(): string {
     return 'aaaaaaaa';
   }
 
-  async findAll(userId: string, status: string): Promise<any> {
-    console.log(userId);
-    // const options = {               //ดูจากไทแมทชีน
-    //   page: page,
-    //   limit: limit,
-    //   sort: typeSortToOrder,
-    // };
+  async findAll(
+    user: any,
+    status: string,
+    page: number,
+    customerId: string,
+  ): Promise<any> {
+    const userId = await user.userId;
+    const role = await user.role;
+    const options = {
+      page: page,
+      limit: 10,
+      sort: 'date',
+    };
+    let filter;
+    if (role == 'admin') {
+      if (customerId == 'all') {
+        filter = await { status: status };
+      } else {
+        filter = await { userId: customerId, status: status };
+      }
+    } else {
+      filter = await { userId: userId, status: status };
+    }
 
-    // const query = this.channelModel.paginate(filter, options);
-    return await this.workModel.find({ userId: userId, status: status });
+    return await this.workModel.paginate(filter, options);
+    // return await this.workModel.find({ userId: userId, status: status });
+    //ยังไม่ได้เช็คว่าsortถูกไหม
   }
 
-  async findOne(userId: string, id: string): Promise<any> {
-    return await this.workModel.findOne({ userId: userId, _id: id });
+  async findOne(id: string): Promise<any> {
+    return await this.workModel.findOne({ _id: id });
   }
 
   async newWork(user: any, body: any): Promise<any> {
     try {
       body['userId'] = await user.userId;
-      body['fullname'] = await ((await user.firstname) +
-        ' ' +
-        (await user.lastname));
+      body['fullname'] = await user.fullname;
       body['status'] = await 'new';
+      body['date'] = await new Date();
+      console.log(typeof body['deadline']);
+      console.log(typeof body['date']);
       console.log(body);
       const work = await new this.workModel(body);
       return await work.save();
@@ -48,6 +69,17 @@ export class WorkService {
       return await this.workModel.updateOne({ _id: id }, body);
     } catch (e) {
       console.log('Error at updateWork function in work.service');
+      console.log(e);
+      throw e;
+    }
+  }
+
+  async softDelete(id: string): Promise<any> {
+    try {
+      const body = await { status: 'cancel' };
+      return await this.workModel.updateOne({ _id: id }, body);
+    } catch (e) {
+      console.log('Error at softDelete function in work.service');
       console.log(e);
       throw e;
     }

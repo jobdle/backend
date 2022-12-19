@@ -24,6 +24,10 @@ export class UserService {
       if (!(firstname && lastname && username && password && email)) {
         return null;
       }
+      const checkEmail = await this.userModel.findOne({ email: email });
+      if (checkEmail) {
+        return null;
+      }
       data.role = 'user';
       const saltOrRounds = 10;
       const hash = await bcrypt.hash(password, saltOrRounds);
@@ -44,6 +48,7 @@ export class UserService {
       lastname: user.lastname,
       username: user.username,
       email: user.email,
+      role: user.role,
     };
   }
 }
