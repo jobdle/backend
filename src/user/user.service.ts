@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../model/user.model';
@@ -22,18 +22,19 @@ export class UserService {
       console.log('register');
       const { firstname, lastname, username, password, email } = data;
       if (!(firstname && lastname && username && password && email)) {
-        return null;
+        throw new BadRequestException('Some fields are missing.');
       }
       const checkEmail = await this.userModel.findOne({ email: email });
       if (checkEmail) {
-        return null;
+        throw new BadRequestException('This email is already used.');
       }
       data.role = 'user';
       const saltOrRounds = 10;
       const hash = await bcrypt.hash(password, saltOrRounds);
       data.password = hash;
       const user = await new this.userModel(data);
-      return await user.save();
+      await user.save();
+      return { message: 'Account created successfully.' };
     } catch (e) {
       console.log('Error at createUserAccount function in user.service');
       console.log(e);
@@ -50,5 +51,15 @@ export class UserService {
       email: user.email,
       role: user.role,
     };
+  }
+
+  async updateOneUserData(id: any, body: any): Promise<any> {
+    try {
+      return await this.userModel.updateOne({ _id: id }, body);
+    } catch (e) {
+      console.log('Error at updateOneUserData function in user.service');
+      console.log(e);
+      throw e;
+    }
   }
 }

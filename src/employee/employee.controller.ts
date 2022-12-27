@@ -1,18 +1,53 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+  Param,
+  HttpCode,
+  Body,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { EmployeeService } from './employee.service';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
+  @UseGuards(JwtAuthGuard)
   @Get()
-  getHello(): string {
-    return this.employeeService.getHello();
+  async getAll(): Promise<any> {
+    return await this.employeeService.findAll();
   }
 
-  //   @UseGuards(JwtAuthGuard)
-  //   @Get('profile')
-  //   async getProfile(@Request() req) {
-  //     return await this.EmployeeService.getOneUserData(req.user.userId);
-  //   }
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async getOne(@Request() req, @Param('id') id: string): Promise<any> {
+    return await this.employeeService.findOne(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  @HttpCode(201)
+  async addEmployee(@Request() req, @Body() body: any): Promise<any> {
+    return await this.employeeService.newEmployee(req.user, body);
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Delete(':id')
+  // async softDeleteOne(@Request() req, @Param('id') id: string): Promise<any> {
+  //   return await this.employeeService.softDelete(id);
+  // }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async patchOne(
+    @Request() req,
+    @Body() body: any,
+    @Param('id') id: string,
+  ): Promise<any> {
+    return await this.employeeService.updateOneEmployee(id, body);
+  }
 }

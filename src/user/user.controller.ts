@@ -1,4 +1,12 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+  Body,
+  Patch,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UserService } from './user.service';
 
@@ -14,5 +22,11 @@ export class UserController {
   @Get('profile')
   async getProfile(@Request() req) {
     return await this.userService.getOneUserData(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  async updateProfile(@Request() req, @Body() body: any): Promise<any> {
+    return await this.userService.updateOneUserData(req.user.userId, body);
   }
 }

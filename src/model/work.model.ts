@@ -12,6 +12,7 @@ export const workSchema = new mongoose.Schema({
   status: String,
   date: Date,
   deadline: Date,
+  employeeId: [String],
 });
 
 export interface Work {
@@ -26,4 +27,5 @@ export interface Work {
   status: string;
   date: Date;
   deadline: Date;
+  employeeId: [string];
 }
