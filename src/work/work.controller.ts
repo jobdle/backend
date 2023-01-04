@@ -13,6 +13,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ResponseMessage } from 'src/model/response';
+import { Work } from 'src/model/work.model';
 import { WorkService } from './work.service';
 
 @Controller('work')
@@ -36,21 +38,24 @@ export class WorkController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getOne(@Request() req, @Param('id') id: string): Promise<any> {
+  async getOne(@Request() req, @Param('id') id: string): Promise<Work> {
     return await this.workService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(201)
-  async postWork(@Request() req, @Body() body: any): Promise<any> {
+  async postWork(@Request() req, @Body() body: any): Promise<ResponseMessage> {
     console.log('hi');
     return await this.workService.newWork(req.user, body);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async softDeleteOne(@Request() req, @Param('id') id: string): Promise<any> {
+  async softDeleteOne(
+    @Request() req,
+    @Param('id') id: string,
+  ): Promise<ResponseMessage> {
     return await this.workService.softDelete(id);
   }
 

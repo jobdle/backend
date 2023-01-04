@@ -4,29 +4,38 @@ import { Model } from 'mongoose';
 import { User } from '../model/user.model';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as bcrypt from 'bcrypt';
+import { ChatroomService } from 'src/chatroom/chatroom.service';
+import { ResponseMessage } from 'src/model/response';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<User>,
+    private readonly chatroomService: ChatroomService,
+  ) {}
   getHello(): string {
     return 'aaaaaaaa';
   }
 
-  async findOne(username: string): Promise<any> {
+  async findOne(username: string): Promise<User> {
     return await this.userModel.findOne({ username: username });
   }
 
-  async createUserAccount(data: User): Promise<any> {
+  async createUserAccount(data: User): Promise<ResponseMessage> {
     try {
-      console.log(data);
       console.log('register');
-      const { firstname, lastname, username, password, email } = data;
+      const { firstname, lastname, username, password, email }: User = data;
       if (!(firstname && lastname && username && password && email)) {
         throw new BadRequestException('Some fields are missing.');
       }
-      const checkEmail = await this.userModel.findOne({ email: email });
+      const checkEmail = await this.userModel.findOne({
+        $or: [{ email: email }, { username: username }],
+      });
+      console.log(checkEmail);
       if (checkEmail) {
-        throw new BadRequestException('This email is already used.');
+        throw new BadRequestException(
+          'This email or username is already used.',
+        );
       }
       data.role = 'user';
       const saltOrRounds = 10;
@@ -34,6 +43,7 @@ export class UserService {
       data.password = hash;
       const user = await new this.userModel(data);
       await user.save();
+      this.chatroomService.newroom(await user.id);
       return { message: 'Account created successfully.' };
     } catch (e) {
       console.log('Error at createUserAccount function in user.service');
@@ -42,8 +52,8 @@ export class UserService {
     }
   }
 
-  async getOneUserData(userId: any): Promise<any> {
-    const user = await this.userModel.findOne({ _id: userId });
+  async getOneUserData(userId: string): Promise<any> {
+    const user: User = await this.userModel.findOne({ _id: userId });
     return await {
       firstname: user.firstname,
       lastname: user.lastname,
@@ -53,9 +63,10 @@ export class UserService {
     };
   }
 
-  async updateOneUserData(id: any, body: any): Promise<any> {
+  async updateOneUserData(id: string, body: any): Promise<ResponseMessage> {
     try {
-      return await this.userModel.updateOne({ _id: id }, body);
+      await this.userModel.updateOne({ _id: id }, body);
+      return { message: 'Account update successfully.' };
     } catch (e) {
       console.log('Error at updateOneUserData function in user.service');
       console.log(e);

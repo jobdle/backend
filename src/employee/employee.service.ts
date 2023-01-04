@@ -5,6 +5,7 @@ import { Model, PaginateModel } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import 'mongoose-paginate-v2';
 import { Employee } from 'src/model/employee.model';
+import { ResponseMessage } from 'src/model/response';
 
 @Injectable()
 export class EmployeeService {
@@ -12,18 +13,19 @@ export class EmployeeService {
     @InjectModel('Employee')
     private readonly employeeModel: PaginateModel<Employee>,
   ) {}
-  async findOne(id: string): Promise<any> {
+  async findOne(id: string): Promise<Employee> {
     return await this.employeeModel.findOne({ _id: id });
   }
 
-  async findAll(): Promise<any> {
+  async findAll(): Promise<Array<Employee>> {
     return await this.employeeModel.find();
   }
 
-  async newEmployee(user: any, body: any): Promise<any> {
+  async newEmployee(user: any, body: any): Promise<ResponseMessage> {
     try {
       const employee = await new this.employeeModel(body);
-      return await employee.save();
+      employee.save();
+      return { message: 'Add new employee successfully.' };
     } catch (e) {
       console.log('Error at newEmployee function in employee.service');
       console.log(e);

@@ -1,11 +1,6 @@
-import {
-  Controller,
-  Request,
-  Post,
-  UseGuards,
-  Get,
-  Body,
-} from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body } from '@nestjs/common';
+import { ResponseMessage, ResponseToken } from 'src/model/response';
+import { User } from 'src/model/user.model';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -18,19 +13,14 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
-  @Get()
-  getHello(): string {
-    return 'aaaa';
-  }
-
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async signIn(@Request() req): Promise<any> {
+  async signIn(@Request() req): Promise<ResponseToken> {
     return await this.authService.login(req.user);
   }
 
   @Post('signup')
-  async signUp(@Body() data: any): Promise<any> {
+  async signUp(@Body() data: User): Promise<ResponseMessage> {
     return await this.userService.createUserAccount(data);
   }
 }

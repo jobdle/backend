@@ -11,6 +11,8 @@ import {
   Patch,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Employee } from 'src/model/employee.model';
+import { ResponseMessage } from 'src/model/response';
 import { EmployeeService } from './employee.service';
 
 @Controller('employee')
@@ -18,20 +20,23 @@ export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAll(): Promise<any> {
+  async getAll(): Promise<Array<Employee>> {
     return await this.employeeService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getOne(@Request() req, @Param('id') id: string): Promise<any> {
+  async getOne(@Request() req, @Param('id') id: string): Promise<Employee> {
     return await this.employeeService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(201)
-  async addEmployee(@Request() req, @Body() body: any): Promise<any> {
+  async addEmployee(
+    @Request() req,
+    @Body() body: any,
+  ): Promise<ResponseMessage> {
     return await this.employeeService.newEmployee(req.user, body);
   }
 
