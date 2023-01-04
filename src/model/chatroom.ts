@@ -4,24 +4,25 @@ export const chatroomSchema = new mongoose.Schema({
   userId: String, //เลขห้อง
   messages: [
     {
-      sender: String,
+      sender: String, //userId?
       content_type: String,
       content: String,
       timeStamp: Date,
     },
   ],
+  lastIndexMessage: Number,
 });
 
 export interface MessageForData {
-  userId: string;
-  sender: string;
+  roomId: string;
+  senderId: string; //userId?
   content_type: string;
   content: string;
   timeStamp: Date;
 }
 
 export interface Message {
-  sender: string;
+  senderId: string; //userId?
   content_type: string;
   content: string;
   timeStamp: Date;

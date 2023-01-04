@@ -34,8 +34,8 @@ export class ChatroomController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/getLastMessage')
-  async getLastMessage(@Query('userId') userId: string) {
-    return await this.chatroomService.LastMessage(userId);
+  @Get('/lastmessage')
+  async getLastMessage(@Query('roomId') roomId: string) {
+    return await this.chatroomService.lastMessage(roomId);
   }
 }

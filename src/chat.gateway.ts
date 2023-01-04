@@ -23,7 +23,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleMessage(
     client: Socket,
     messageContent: {
-      room: string;
+      roomId: string;
       content: {
         sender: string;
         senderID: string;
@@ -34,21 +34,24 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     },
   ) {
     console.log('SEND DATA SUCCESS : ' + messageContent.content.content);
-    this.server.to(messageContent.room).emit('message', messageContent);
-    const body: MessageForData = {
-      userId: messageContent.room,
-      sender: messageContent.content.sender,
+    this.server.to(messageContent.roomId).emit('message', messageContent);
+    const body: MessageForData = await {
+      roomId: messageContent.roomId,
+      senderId: messageContent.content.sender,
       content_type: messageContent.content.content_type,
       content: messageContent.content.content,
       timeStamp: messageContent.content.timeStamp,
     };
+    console.log('111111');
+    console.log(messageContent.roomId);
+    console.log(messageContent);
     await this.chatroomService.addMessage(body);
   }
 
   @SubscribeMessage('joinroom')
-  async JoinRoom(client: Socket, room: string) {
-    client.join(room);
-    console.log('JOINROOM :' + room);
+  async JoinRoom(client: Socket, roomId: string) {
+    client.join(roomId);
+    console.log('JOINROOM :' + roomId);
     //this.server.emit('joinroom', room);
   }
 
