@@ -26,7 +26,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       roomId: string;
       content: {
         sender: string;
-        senderID: string;
+        senderId: string;
         content_type: string;
         content: string;
         timeStamp: Date;
@@ -37,14 +37,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.to(messageContent.roomId).emit('message', messageContent);
     const body: MessageForData = await {
       roomId: messageContent.roomId,
-      senderId: messageContent.content.sender,
+      senderId: messageContent.content.senderId,
       content_type: messageContent.content.content_type,
       content: messageContent.content.content,
       timeStamp: messageContent.content.timeStamp,
     };
-    console.log('111111');
-    console.log(messageContent.roomId);
-    console.log(messageContent);
     await this.chatroomService.addMessage(body);
   }
 

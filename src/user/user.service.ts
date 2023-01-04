@@ -59,7 +59,7 @@ export class UserService {
 
   async getName(userId: string): Promise<any> {
     const user: User = await this.userModel.findOne({ _id: userId });
-    return await (user.firstname + '' + user.lastname);
+    return await (user.firstname + ' ' + user.lastname);
   }
 
   async updateOneUserData(id: string, body: any): Promise<ResponseMessage> {
