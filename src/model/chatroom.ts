@@ -4,7 +4,7 @@ export const chatroomSchema = new mongoose.Schema({
   userId: String, //เลขห้อง
   messages: [
     {
-      sender: String, //userId?
+      senderId: String, //userId?
       content_type: String,
       content: String,
       timeStamp: Date,
