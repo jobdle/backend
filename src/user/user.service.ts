@@ -57,6 +57,11 @@ export class UserService {
     return user;
   }
 
+  async getName(userId: string): Promise<any> {
+    const user: User = await this.userModel.findOne({ _id: userId });
+    return await (user.firstname + '' + user.lastname);
+  }
+
   async updateOneUserData(id: string, body: any): Promise<ResponseMessage> {
     try {
       await this.userModel.updateOne({ _id: id }, body);

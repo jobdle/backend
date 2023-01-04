@@ -5,6 +5,7 @@ import {
   Request,
   Body,
   Patch,
+  Param,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ResponseMessage } from 'src/model/response';
@@ -19,6 +20,12 @@ export class UserController {
   @Get('profile')
   async getProfile(@Request() req): Promise<any> {
     return await this.userService.getOneUserData(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('fullname/:id')
+  async getname(@Request() req, @Param('id') id: string): Promise<any> {
+    return await this.userService.getName(id);
   }
 
   @UseGuards(JwtAuthGuard)
