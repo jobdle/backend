@@ -43,7 +43,10 @@ export class UserService {
       data.password = hash;
       const user = await new this.userModel(data);
       await user.save();
-      this.chatroomService.newroom(await user.id);
+      this.chatroomService.newroom(
+        await user.id,
+        await (user.firstname + ' ' + user.lastname),
+      );
       return { message: 'Account created successfully.' };
     } catch (e) {
       console.log('Error at createUserAccount function in user.service');
@@ -55,11 +58,6 @@ export class UserService {
   async getOneUserData(userId: string): Promise<any> {
     const user: User = await this.userModel.findOne({ _id: userId });
     return user;
-  }
-
-  async getName(userId: string): Promise<any> {
-    const user: User = await this.userModel.findOne({ _id: userId });
-    return await (user.firstname + ' ' + user.lastname);
   }
 
   async updateOneUserData(id: string, body: any): Promise<ResponseMessage> {

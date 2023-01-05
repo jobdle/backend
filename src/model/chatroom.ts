@@ -1,6 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export const chatroomSchema = new mongoose.Schema({
+  nameOfUser: String,
   userId: String, //เลขห้อง
   messages: [
     {

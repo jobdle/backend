@@ -19,13 +19,14 @@ export class ChatroomService {
     return await this.chatroomModel.findOne({ userId: user.userId });
   }
 
-  async newroom(userId: string): Promise<void> {
+  async newroom(userId: string, fullname: string): Promise<void> {
     console.log(userId);
     const checkroom = await this.chatroomModel.findOne({
       userId: userId,
     });
     if (!checkroom) {
       const newRoom = await new this.chatroomModel({
+        nameOfUser: fullname,
         userId: userId,
         messages: [],
         idxMessage: 0,

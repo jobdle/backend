@@ -23,12 +23,6 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('fullname/:id')
-  async getname(@Request() req, @Param('id') id: string): Promise<any> {
-    return await this.userService.getName(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Patch('profile')
   async updateProfile(
     @Request() req,
