@@ -23,6 +23,7 @@ export class EmployeeService {
 
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {
     try {
+      body[status] = 'out';
       const employee = await new this.employeeModel(body);
       employee.save();
       return { message: 'Add new employee successfully.' };
@@ -33,16 +34,16 @@ export class EmployeeService {
     }
   }
 
-  // async softDelete(id: string): Promise<any> {
-  //   try {
-  //     const body = await { status: 'out' };
-  //     return await this.employeeModel.updateOne({ _id: id }, body);
-  //   } catch (e) {
-  //     console.log('Error at softDelete function in work.service');
-  //     console.log(e);
-  //     throw e;
-  //   }
-  // }
+  async softDelete(id: string): Promise<any> {
+    try {
+      const body = await { status: 'out' };
+      return await this.employeeModel.updateOne({ _id: id }, body);
+    } catch (e) {
+      console.log('Error at softDelete function in work.service');
+      console.log(e);
+      throw e;
+    }
+  }
 
   async updateOneEmployee(id: any, body: any): Promise<any> {
     try {

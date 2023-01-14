@@ -40,11 +40,11 @@ export class EmployeeController {
     return await this.employeeService.newEmployee(req.user, body);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Delete(':id')
-  // async softDeleteOne(@Request() req, @Param('id') id: string): Promise<any> {
-  //   return await this.employeeService.softDelete(id);
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async softDeleteOne(@Request() req, @Param('id') id: string): Promise<any> {
+    return await this.employeeService.softDelete(id);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')

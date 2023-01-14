@@ -8,6 +8,7 @@ export const employeeSchema = new mongoose.Schema({
   age: Number,
   gender: String,
   works: [{ id: String, title: String }],
+  status: String,
 });
 
 export interface Employee {
@@ -18,4 +19,5 @@ export interface Employee {
   age: number;
   gender: string;
   works: [{ id: string; title: string }];
+  status: string;
 }
