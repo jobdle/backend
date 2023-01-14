@@ -23,7 +23,7 @@ export class EmployeeService {
 
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {
     try {
-      body[status] = 'out';
+      body['status'] = 'out';
       const employee = await new this.employeeModel(body);
       employee.save();
       return { message: 'Add new employee successfully.' };
