@@ -17,13 +17,13 @@ export class EmployeeService {
     return await this.employeeModel.findOne({ _id: id });
   }
 
-  async findAll(): Promise<Array<Employee>> {
-    return await this.employeeModel.find();
+  async findAll(user: any, status: string): Promise<Array<Employee>> {
+    return await this.employeeModel.find({ status: status });
   }
 
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {
     try {
-      body['status'] = 'out';
+      body['status'] = 'employee';
       const employee = await new this.employeeModel(body);
       employee.save();
       return { message: 'Add new employee successfully.' };
