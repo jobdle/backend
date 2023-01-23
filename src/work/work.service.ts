@@ -2,8 +2,9 @@ import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel } from 'mongoose';
 import 'mongoose-paginate-v2';
+import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
-import { Work } from 'src/model/work.model';
+import { Work } from 'src/model/schema/work.schema';
 
 @Injectable()
 export class WorkService {
@@ -43,11 +44,11 @@ export class WorkService {
     //ยังไม่ได้เช็คว่าsortถูกไหม
   }
 
-  async findOne(id: string): Promise<Work> {
+  async findOne(id: string): Promise<WorkDto> {
     return await this.workModel.findOne({ _id: id });
   }
 
-  async newWork(user: any, body: Work): Promise<any> {
+  async newWork(user: any, body: WorkDto): Promise<any> {
     try {
       body['userId'] = await user.userId;
       body['fullname'] = await user.fullname;

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { ChatroomService } from './chatroom/chatroom.service';
-import { MessageForData } from './model/chatroom';
+import { MessageForDataDto } from './model/dto/chatroom.dto';
 
 @WebSocketGateway({ cors: { credentials: true } })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -35,7 +35,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     console.log('SEND DATA SUCCESS : ' + messageContent.content.content);
     this.server.to(messageContent.roomId).emit('message', messageContent);
-    const body: MessageForData = await {
+    const body: MessageForDataDto = await {
       roomId: messageContent.roomId,
       senderId: messageContent.content.senderId,
       content_type: messageContent.content.content_type,

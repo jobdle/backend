@@ -13,8 +13,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
-import { Work } from 'src/model/work.model';
 import { WorkService } from './work.service';
 
 @Controller('work')
@@ -38,7 +38,7 @@ export class WorkController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getOne(@Request() req, @Param('id') id: string): Promise<Work> {
+  async getOne(@Request() req, @Param('id') id: string): Promise<WorkDto> {
     return await this.workService.findOne(id);
   }
 

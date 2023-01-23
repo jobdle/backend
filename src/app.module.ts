@@ -17,13 +17,23 @@ require('dotenv').config();
   imports: [
     MongooseModule.forRoot(process.env.MONGODB_URL),
     MailerModule.forRoot({
-      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
-      defaults: {
-        from: '"nest-modules" <modules@nestjs.com>',
+      transport: {
+        host: 'localhost',
+        port: 1025,
+        ignoreTLS: true,
+        secure: false,
+        auth: {
+          user: process.env.MAILDEV_INCOMING_USER,
+          pass: process.env.MAILDEV_INCOMING_PASS,
+        },
       },
+      defaults: {
+        from: '"No Reply" <no-reply@localhost>',
+      },
+      preview: true,
       template: {
-        dir: __dirname + '/templates',
-        adapter: new HandlebarsAdapter(),
+        dir: process.cwd() + '/template/',
+        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
         options: {
           strict: true,
         },

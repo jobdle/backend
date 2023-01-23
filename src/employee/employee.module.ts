@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtStrategy } from 'src/auth/jwt.strategy';
-import { employeeSchema } from 'src/model/employee.model';
+import { EmployeeSchema } from 'src/model/schema/employee.schema';
 import { EmployeeController } from './employee.controller';
 import { EmployeeService } from './employee.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'Employee', schema: employeeSchema }]),
+    MongooseModule.forFeature([{ name: 'Employee', schema: EmployeeSchema }]),
     EmployeeModule,
   ],
   controllers: [EmployeeController],

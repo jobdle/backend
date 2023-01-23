@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from '../model/user.model';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as bcrypt from 'bcrypt';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
 import { ResponseMessage } from 'src/model/response';
+import { UserDto } from 'src/model/dto/user.dto';
+import { User } from 'src/model/schema/user.schema';
 
 @Injectable()
 export class UserService {
@@ -17,17 +18,14 @@ export class UserService {
     return 'aaaaaaaa';
   }
 
-  async findOne(username: string): Promise<User> {
+  async findOne(username: string): Promise<UserDto> {
     return await this.userModel.findOne({ username: username });
   }
 
-  async createUserAccount(data: User): Promise<ResponseMessage> {
+  async createUserAccount(data: UserDto): Promise<ResponseMessage> {
     try {
       console.log('register');
-      const { firstname, lastname, username, password, email }: User = data;
-      if (!(firstname && lastname && username && password && email)) {
-        throw new BadRequestException('Some fields are missing.');
-      }
+      const { username, password, email } = data;
       const checkEmail = await this.userModel.findOne({
         $or: [{ email: email }, { username: username }],
       });
@@ -43,6 +41,8 @@ export class UserService {
       data.password = hash;
       const user = await new this.userModel(data);
       await user.save();
+      console.log(3);
+      console.log(user.id);
       this.chatroomService.newroom(
         await user.id,
         await (user.firstname + ' ' + user.lastname),

@@ -12,7 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Employee } from 'src/model/employee.model';
+import { EmployeeDto } from 'src/model/dto/employee.dto';
 import { ResponseMessage } from 'src/model/response';
 import { EmployeeService } from './employee.service';
 
@@ -24,14 +24,14 @@ export class EmployeeController {
   async getAll(
     @Request() req,
     @Query('status') status: string,
-  ): Promise<Array<Employee>> {
+  ): Promise<Array<EmployeeDto>> {
     status = status === undefined ? 'employee' : status;
     return await this.employeeService.findAll(req.user, status);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getOne(@Request() req, @Param('id') id: string): Promise<Employee> {
+  async getOne(@Request() req, @Param('id') id: string): Promise<EmployeeDto> {
     return await this.employeeService.findOne(id);
   }
 

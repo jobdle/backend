@@ -8,8 +8,9 @@ import {
   Param,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UserDto } from 'src/model/dto/user.dto';
 import { ResponseMessage } from 'src/model/response';
-import { User } from 'src/model/user.model';
+import { User } from 'src/model/schema/user.schema';
 import { UserService } from './user.service';
 
 @Controller('user')

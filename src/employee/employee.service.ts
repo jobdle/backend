@@ -4,8 +4,9 @@ import { Model, PaginateModel } from 'mongoose';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as bcrypt from 'bcrypt';
 import 'mongoose-paginate-v2';
-import { Employee } from 'src/model/employee.model';
 import { ResponseMessage } from 'src/model/response';
+import { Employee } from 'src/model/schema/employee.schema';
+import { EmployeeDto } from 'src/model/dto/employee.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -13,11 +14,11 @@ export class EmployeeService {
     @InjectModel('Employee')
     private readonly employeeModel: PaginateModel<Employee>,
   ) {}
-  async findOne(id: string): Promise<Employee> {
+  async findOne(id: string): Promise<EmployeeDto> {
     return await this.employeeModel.findOne({ _id: id });
   }
 
-  async findAll(user: any, status: string): Promise<Array<Employee>> {
+  async findAll(user: any, status: string): Promise<Array<EmployeeDto>> {
     return await this.employeeModel.find({ status: status });
   }
 

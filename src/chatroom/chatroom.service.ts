@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Chatroom, MessageForData, Message } from 'src/model/chatroom';
+import { MessageDto, MessageForDataDto } from 'src/model/dto/chatroom.dto';
 import { ResponseMessage } from 'src/model/response';
-import { User } from 'src/model/user.model';
+import { Chatroom } from 'src/model/schema/chatroom.schema';
 
 @Injectable()
 export class ChatroomService {
@@ -36,9 +36,9 @@ export class ChatroomService {
     }
   }
 
-  async addMessage(body: MessageForData): Promise<ResponseMessage> {
+  async addMessage(body: MessageForDataDto): Promise<ResponseMessage> {
     console.log(body);
-    const message: Message = await {
+    const message: MessageDto = await {
       senderId: body.senderId,
       content_type: body.content_type,
       content: body.content,
