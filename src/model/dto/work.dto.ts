@@ -29,11 +29,16 @@ export class WorkDto {
   status: string;
 
   @IsISO8601()
-  date: Date;
-
-  @IsISO8601()
   deadline: Date;
 
   @IsArray()
   employeeId: [string];
+}
+
+export class getAllWorkDto {
+  status: null | [string];
+  page: null | number;
+  customerId: null | string;
+  sort: null | string;
+  order: null | string;
 }

@@ -30,9 +30,6 @@ export class Work {
   status: string;
 
   @Prop()
-  date: Date;
-
-  @Prop()
   deadline: Date;
 
   @Prop([String])

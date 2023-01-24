@@ -14,9 +14,6 @@ export class UserService {
     @InjectModel('User') private readonly userModel: Model<User>,
     private readonly chatroomService: ChatroomService,
   ) {}
-  getHello(): string {
-    return 'aaaaaaaa';
-  }
 
   async findOne(username: string): Promise<UserDto> {
     return await this.userModel.findOne({ username: username });

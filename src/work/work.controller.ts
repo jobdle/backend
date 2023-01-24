@@ -13,7 +13,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { WorkDto } from 'src/model/dto/work.dto';
+import { getAllWorkDto, WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
 import { WorkService } from './work.service';
 
@@ -23,17 +23,11 @@ export class WorkController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAll(
+  async getOneStatus(
     @Request() req,
-    @Query('status') status: string,
-    @Query('page') page: number,
-    @Query('customerId') customerId: string,
+    @Body() body: getAllWorkDto,
   ): Promise<any> {
-    page = await Number(page);
-    status = status === undefined ? 'new' : status;
-    page = await (page > 0 ? page : 1);
-    customerId = customerId === undefined ? 'all' : customerId;
-    return await this.workService.findAll(req.user, status, page, customerId);
+    return await this.workService.findAll(req.user, body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -46,7 +40,6 @@ export class WorkController {
   @Post()
   @HttpCode(201)
   async postWork(@Request() req, @Body() body: any): Promise<ResponseMessage> {
-    console.log('hi');
     return await this.workService.newWork(req.user, body);
   }
 

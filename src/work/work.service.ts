@@ -1,8 +1,8 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel } from 'mongoose';
 import 'mongoose-paginate-v2';
-import { WorkDto } from 'src/model/dto/work.dto';
+import { getAllWorkDto, WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
 import { Work } from 'src/model/schema/work.schema';
 
@@ -15,33 +15,45 @@ export class WorkService {
     return 'aaaaaaaa';
   }
 
-  async findAll(
-    user: any,
-    status: string,
-    page: number,
-    customerId: string,
-  ): Promise<any> {
-    const userId = await user.userId;
-    const role = await user.role;
+  async findAll(user: any, body: getAllWorkDto): Promise<any> {
+    body.page = await Number(body.page);
+    const page = await (body.page > 0 ? body.page : 1);
+    const status = await body.status;
+    const sort = await (body.sort === undefined ? 'updatedAt' : body.sort);
+    const customerId = await (body.customerId === undefined
+      ? 'all'
+      : body.customerId);
+    const order = await (body.order === 'asc' || body.order === 'desc'
+      ? body.order
+      : 'desc');
+    const typeSortToOrder = {};
+    typeSortToOrder[sort] = order;
     const options = {
       page: page,
       limit: 10,
-      sort: 'date',
+      sort: typeSortToOrder,
     };
-    let filter;
+    const filter = {};
+    if (status == undefined) {
+      filter['status'] = 'new';
+    } else {
+      const orStatus = [];
+      for (let i = 0; i < status.length; i++) {
+        orStatus[i] = await { status: status[i] };
+      }
+      filter['$or'] = orStatus;
+    }
+
+    const role = await user.role;
     if (role == 'admin') {
-      if (customerId == 'all') {
-        filter = await { status: status };
-      } else {
-        filter = await { userId: customerId, status: status };
+      if (customerId != 'all') {
+        filter['userId'] = await customerId;
       }
     } else {
-      filter = await { userId: userId, status: status };
+      filter['userId'] = await user.userId;
     }
 
     return await this.workModel.paginate(filter, options);
-    // return await this.workModel.find({ userId: userId, status: status });
-    //ยังไม่ได้เช็คว่าsortถูกไหม
   }
 
   async findOne(id: string): Promise<WorkDto> {
@@ -53,10 +65,6 @@ export class WorkService {
       body['userId'] = await user.userId;
       body['fullname'] = await user.fullname;
       body['status'] = await 'new';
-      body['date'] = await new Date();
-      console.log(typeof body['deadline']);
-      console.log(typeof body['date']);
-      console.log(body);
       const work = await new this.workModel(body);
       return await work.save();
     } catch (e) {
