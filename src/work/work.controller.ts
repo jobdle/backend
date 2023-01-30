@@ -25,9 +25,20 @@ export class WorkController {
   @Get()
   async getOneStatus(
     @Request() req,
-    @Body() body: getAllWorkDto,
+    @Query('status') status: [string],
+    @Query('page') page: number,
+    @Query('customerId') customerId: string,
+    @Query('sort') sort: string,
+    @Query('order') order: string,
   ): Promise<any> {
-    return await this.workService.findAll(req.user, body);
+    return await this.workService.findAll(
+      req.user,
+      status,
+      page,
+      customerId,
+      sort,
+      order,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

@@ -49,7 +49,7 @@ export class ChatroomService {
       const lastIndexMessage = await checkroom.messages.length;
       await this.chatroomModel.updateOne(
         { _id: body.roomId },
-        { $push: { messages: [message] }, lastIndexMessage: lastIndexMessage },
+        { $push: { messages: message }, lastIndexMessage: lastIndexMessage },
       );
       console.log('New message Succes');
       return { message: 'New message Succes' };

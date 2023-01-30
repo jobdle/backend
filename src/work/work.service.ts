@@ -15,17 +15,20 @@ export class WorkService {
     return 'aaaaaaaa';
   }
 
-  async findAll(user: any, body: getAllWorkDto): Promise<any> {
-    body.page = await Number(body.page);
-    const page = await (body.page > 0 ? body.page : 1);
-    const status = await body.status;
-    const sort = await (body.sort === undefined ? 'updatedAt' : body.sort);
-    const customerId = await (body.customerId === undefined
-      ? 'all'
-      : body.customerId);
-    const order = await (body.order === 'asc' || body.order === 'desc'
-      ? body.order
-      : 'desc');
+  async findAll(
+    user: any,
+    status,
+    page,
+    customerId,
+    sort,
+    order,
+  ): Promise<any> {
+    page = await Number(page);
+    page = await (page > 0 ? page : 1);
+    status = await status;
+    sort = await (sort === undefined ? 'updatedAt' : sort);
+    customerId = await (customerId === undefined ? 'all' : customerId);
+    order = await (order === 'asc' || order === 'desc' ? order : 'desc');
     const typeSortToOrder = {};
     typeSortToOrder[sort] = order;
     const options = {

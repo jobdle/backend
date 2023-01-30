@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { WorkModule } from './work/work.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { CategoryModule } from './category/category.module';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -44,6 +45,7 @@ require('dotenv').config();
     WorkModule,
     EmployeeModule,
     ChatroomModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],
