@@ -24,8 +24,8 @@ require('dotenv').config();
         ignoreTLS: true,
         secure: false,
         auth: {
-          user: process.env.MAILDEV_INCOMING_USER,
-          pass: process.env.MAILDEV_INCOMING_PASS,
+          user: process.env.EMAIL,
+          pass: process.env.EMAIL_PASS,
         },
       },
       defaults: {
