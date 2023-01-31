@@ -13,7 +13,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { getAllWorkDto, WorkDto } from 'src/model/dto/work.dto';
+import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
 import { WorkService } from './work.service';
 

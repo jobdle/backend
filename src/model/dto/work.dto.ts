@@ -25,7 +25,6 @@ export class WorkDto {
   @IsString()
   fullname: string;
 
-  @IsString()
   status: string;
 
   @IsISO8601()
@@ -33,12 +32,4 @@ export class WorkDto {
 
   @IsArray()
   employeeId: [string];
-}
-
-export class getAllWorkDto {
-  status: null | [string];
-  page: null | number;
-  customerId: null | string;
-  sort: null | string;
-  order: null | string;
 }

@@ -7,6 +7,9 @@ export class Category {
 
   @Prop()
   minWage: number;
+
+  @Prop()
+  deleteAt: Date | null;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

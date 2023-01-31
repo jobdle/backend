@@ -21,23 +21,19 @@ import { CategoryService } from './category.service';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get()
-  async getAll(
-    @Request() req,
-    @Query('status') status: string,
-  ): Promise<Array<CategoryDto>> {
-    status = status === undefined ? 'employee' : status;
-    return await this.categoryService.findAll(req.user, status);
+  async getAll(@Request() req): Promise<Array<CategoryDto>> {
+    return await this.categoryService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Request() req, @Param('id') id: string): Promise<CategoryDto> {
     return await this.categoryService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(201)
   async addCategory(
@@ -47,19 +43,22 @@ export class CategoryController {
     return await this.categoryService.newCategory(req.user, body);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async softDeleteOne(@Request() req, @Param('id') id: string): Promise<any> {
+  async softDeleteOne(
+    @Request() req,
+    @Param('id') id: string,
+  ): Promise<ResponseMessage> {
     return await this.categoryService.softDelete(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Patch(':id')
   async patchOne(
     @Request() req,
     @Body() body: any,
     @Param('id') id: string,
   ): Promise<any> {
-    return await this.employeeService.updateOneEmployee(id, body);
+    return await this.categoryService.updateOneCategory(id, body);
   }
 }

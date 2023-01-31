@@ -35,10 +35,11 @@ export class EmployeeService {
     }
   }
 
-  async softDelete(id: string): Promise<any> {
+  async softDelete(id: string): Promise<ResponseMessage> {
     try {
       const body = await { status: 'out' };
-      return await this.employeeModel.updateOne({ _id: id }, body);
+      await this.employeeModel.updateOne({ _id: id }, body);
+      return { message: 'Delete empolyee successfully.' };
     } catch (e) {
       console.log('Error at softDelete function in work.service');
       console.log(e);

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel } from 'mongoose';
 import 'mongoose-paginate-v2';
-import { getAllWorkDto, WorkDto } from 'src/model/dto/work.dto';
+import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
 import { Work } from 'src/model/schema/work.schema';
 
