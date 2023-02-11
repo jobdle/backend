@@ -1,7 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { platform } from 'os';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 

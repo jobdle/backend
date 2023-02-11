@@ -19,6 +19,9 @@ export class User {
 
   @Prop()
   email: string;
+
+  @Prop()
+  verifyEmail: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

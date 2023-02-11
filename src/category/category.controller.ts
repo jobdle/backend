@@ -12,7 +12,7 @@ import {
   Param,
   Patch,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { CategoryDto } from 'src/model/dto/category.dto';
 import { ResponseMessage } from 'src/model/response';
 import { CategoryService } from './category.service';
@@ -52,13 +52,13 @@ export class CategoryController {
     return await this.categoryService.softDelete(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Patch(':id')
-  async patchOne(
-    @Request() req,
-    @Body() body: any,
-    @Param('id') id: string,
-  ): Promise<any> {
-    return await this.categoryService.updateOneCategory(id, body);
-  }
+  //@UseGuards(JwtAuthGuard)
+  // @Patch(':id')
+  // async patchOne(
+  //   @Request() req,
+  //   @Body() body: any,
+  //   @Param('id') id: string,
+  // ): Promise<any> {
+  //   return await this.categoryService.updateOneCategory(id, body);
+  // }
 }

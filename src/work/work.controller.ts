@@ -12,7 +12,7 @@ import {
   Param,
   Query,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
 import { WorkService } from './work.service';
@@ -50,7 +50,10 @@ export class WorkController {
   @UseGuards(JwtAuthGuard)
   @Post()
   @HttpCode(201)
-  async postWork(@Request() req, @Body() body: any): Promise<ResponseMessage> {
+  async postWork(
+    @Request() req,
+    @Body() body: WorkDto,
+  ): Promise<ResponseMessage> {
     return await this.workService.newWork(req.user, body);
   }
 

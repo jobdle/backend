@@ -11,9 +11,6 @@ export class WorkService {
   constructor(
     @InjectModel('Work') private readonly workModel: PaginateModel<Work>,
   ) {}
-  getHello(): string {
-    return 'aaaaaaaa';
-  }
 
   async findAll(
     user: any,

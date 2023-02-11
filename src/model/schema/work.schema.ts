@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Category } from './category.schema';
 
 @Schema({ timestamps: true })
 export class Work {
@@ -11,8 +12,8 @@ export class Work {
   @Prop()
   detail: string;
 
-  @Prop()
-  category: string;
+  @Prop(Category)
+  category: Category;
 
   @Prop()
   wage: string;

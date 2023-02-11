@@ -7,12 +7,14 @@ import { ChatroomService } from 'src/chatroom/chatroom.service';
 import { ResponseMessage } from 'src/model/response';
 import { UserDto } from 'src/model/dto/user.dto';
 import { User } from 'src/model/schema/user.schema';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
     private readonly chatroomService: ChatroomService,
+    private readonly mailService: MailService,
   ) {}
 
   async findOne(username: string): Promise<UserDto> {
@@ -31,20 +33,29 @@ export class UserService {
         throw new BadRequestException(
           'This email or username is already used.',
         );
+      } else {
+        data.role = 'user';
+        const saltOrRounds = 10;
+        const hash = await bcrypt.hash(password, saltOrRounds);
+        data.password = hash;
+        const user = await new this.userModel(data);
+        await user.save();
+        console.log(3);
+        console.log(user.id);
+        this.chatroomService.newroom(
+          await user.id,
+          await (user.firstname + ' ' + user.lastname),
+        );
+        this.mailService.sendVerifyEmail(
+          email,
+          await user.firstname,
+          await user.lastname,
+          await user.id,
+        );
+        return {
+          message: 'Account created successfully. You must verify email.',
+        };
       }
-      data.role = 'user';
-      const saltOrRounds = 10;
-      const hash = await bcrypt.hash(password, saltOrRounds);
-      data.password = hash;
-      const user = await new this.userModel(data);
-      await user.save();
-      console.log(3);
-      console.log(user.id);
-      this.chatroomService.newroom(
-        await user.id,
-        await (user.firstname + ' ' + user.lastname),
-      );
-      return { message: 'Account created successfully.' };
     } catch (e) {
       console.log('Error at createUserAccount function in user.service');
       console.log(e);

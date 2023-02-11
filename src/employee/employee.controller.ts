@@ -11,7 +11,7 @@ import {
   Patch,
   Query,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { EmployeeDto } from 'src/model/dto/employee.dto';
 import { ResponseMessage } from 'src/model/response';
 import { EmployeeService } from './employee.service';

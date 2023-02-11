@@ -13,6 +13,7 @@ export class ChatroomService {
   ) {}
 
   async getroom(user: any) {
+    //return await this.chatroomModel.find();
     if (user.role == 'admin') {
       return await this.chatroomModel.find();
     }

@@ -6,7 +6,7 @@ import {
   Body,
   Patch,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ResponseMessage } from 'src/model/response';
 import { UserService } from './user.service';
 

@@ -1,7 +1,8 @@
-import { IsString, IsArray, IsISO8601 } from 'class-validator';
+import { IsString, IsArray, IsISO8601, ValidateNested } from 'class-validator';
+import { CategoryDto } from './category.dto';
+import { Type } from 'class-transformer';
 
 export class WorkDto {
-  @IsString()
   userId: string;
 
   @IsString()
@@ -10,19 +11,18 @@ export class WorkDto {
   @IsString()
   detail: string;
 
-  @IsString()
-  category: string;
+  @ValidateNested({ each: true }) //ตรวจไส้ในด้วย
+  @Type(() => CategoryDto) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
+  category: CategoryDto;
 
   @IsString()
   wage: string;
 
-  @IsString()
   note: string;
 
   @IsString()
   location: string;
 
-  @IsString()
   fullname: string;
 
   status: string;
@@ -30,6 +30,5 @@ export class WorkDto {
   @IsISO8601()
   deadline: Date;
 
-  @IsArray()
   employeeId: [string];
 }

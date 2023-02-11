@@ -36,7 +36,10 @@ export class CategoryService {
   async newCategory(user: any, body: CategoryDto): Promise<ResponseMessage> {
     try {
       const name = await body.name;
-      const checkName = await this.categoryModel.findOne({ name: name });
+      const checkName = await this.categoryModel.findOne({
+        name: name,
+        deleteAt: null,
+      });
       if (checkName) {
         throw new BadRequestException('This category name is already used.');
       }
