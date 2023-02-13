@@ -15,7 +15,6 @@ export class WorkDto {
   @Type(() => CategoryDto) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
   category: CategoryDto;
 
-  @IsString()
   wage: string;
 
   note: string;
