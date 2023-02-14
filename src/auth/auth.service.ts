@@ -4,11 +4,14 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { ResponseMessage, ResponseToken } from 'src/model/response';
 import { UserDto } from 'src/model/dto/user.dto';
+import { ChatroomService } from 'src/chatroom/chatroom.service';
+import { BadRequestException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly chatroomService: ChatroomService,
     private jwtService: JwtService,
   ) {}
 
@@ -16,6 +19,10 @@ export class AuthService {
     const user = await this.userService.findOne(username);
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
+      console.log(user.verifyEmail);
+      if (!user.verifyEmail) {
+        throw new BadRequestException('please verify account in your email.');
+      }
       return user;
     }
     return null;
@@ -39,6 +46,7 @@ export class AuthService {
     const userId = await user.userId;
     const body = await { verifyEmail: 1 };
     await this.userService.updateOneUserData(userId, body);
+    this.chatroomService.newroom(await user.id, await user.fullName);
     return { message: 'verify email successfully.' };
   }
 }

@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { VerifyEmailStrategy } from './strategy/verifyEmail.strategy';
 import { MailModule } from 'src/mail/mail.module';
+import { ChatroomModule } from 'src/chatroom/chatroom.module';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -15,6 +16,7 @@ require('dotenv').config();
   imports: [
     PassportModule.register({ session: true }),
     UserModule,
+    ChatroomModule,
     JwtModule.register({
       secret: process.env.JWT_KEY,
       signOptions: { expiresIn: '3600s' },

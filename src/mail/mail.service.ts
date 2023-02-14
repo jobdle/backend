@@ -16,7 +16,8 @@ export class MailService {
     id: string,
   ): Promise<void> {
     console.log(1, email);
-    const token = await this.generateVerifyToken(id);
+    const fullName = await (firstname + ' ' + lastname);
+    const token = await this.generateVerifyToken(id, fullName);
     const url = await (process.env.PUBLIC_CLIENT_URL +
       '/token/verify?token=' +
       token);
@@ -49,7 +50,7 @@ export class MailService {
     });
   }
 
-  async generateVerifyToken(id: string): Promise<string> {
-    return await this.jwtService.sign({ userId: id });
+  async generateVerifyToken(id: string, fullName: string): Promise<string> {
+    return await this.jwtService.sign({ userId: id, fullName: fullName });
   }
 }

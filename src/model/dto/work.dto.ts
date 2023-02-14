@@ -1,6 +1,9 @@
 import { IsString, IsArray, IsISO8601, ValidateNested } from 'class-validator';
-import { CategoryDto } from './category.dto';
 import { Type } from 'class-transformer';
+import { Category } from '../schema/category.schema';
+import { Employee } from '../schema/employee.schema';
+import { CategoryDto } from './category.dto';
+import { EmployeeDto } from './employee.dto';
 
 export class WorkDto {
   userId: string;
@@ -12,8 +15,8 @@ export class WorkDto {
   detail: string;
 
   @ValidateNested({ each: true }) //ตรวจไส้ในด้วย
-  @Type(() => CategoryDto) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
-  category: CategoryDto;
+  @Type(() => Category) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
+  category: Category;
 
   wage: string;
 
@@ -29,5 +32,5 @@ export class WorkDto {
   @IsISO8601()
   deadline: Date;
 
-  employeeId: [string];
+  employee: [Employee];
 }

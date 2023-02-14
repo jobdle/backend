@@ -1,22 +1,29 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { WorkDataForEmployeeDto } from '../dto/employee.dto';
+import { Work } from './work.schema';
 
 @Schema({ timestamps: true })
 export class Employee {
   @Prop()
   firstname: string;
+
   @Prop()
   lastname: string;
+
   @Prop()
   tel: string;
+
   @Prop()
   email: string;
+
   @Prop()
   age: number;
+
   @Prop()
   gender: string;
-  @Prop([WorkDataForEmployeeDto])
-  works: WorkDataForEmployeeDto[];
+
+  @Prop([Work])
+  works: Work[];
+
   @Prop()
   status: string;
 }

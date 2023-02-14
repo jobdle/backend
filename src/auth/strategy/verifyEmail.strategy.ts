@@ -20,6 +20,7 @@ export class VerifyEmailStrategy extends PassportStrategy(
   async validate(payload: any) {
     return await {
       userId: payload.userId,
+      fullName: payload.fullName,
     };
   }
 }

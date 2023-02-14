@@ -1,5 +1,5 @@
-import { IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNumber } from 'class-validator';
+import { Work } from '../schema/work.schema';
 
 export class EmployeeDto {
   @IsString()
@@ -20,19 +20,8 @@ export class EmployeeDto {
   @IsString()
   gender: string;
 
-  @IsArray()
-  @ValidateNested({ each: true }) //ตรวจไส้ในด้วย
-  @Type(() => WorkDataForEmployeeDto) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
-  works: WorkDataForEmployeeDto[];
+  works: Work;
 
   @IsString()
   status: string;
-}
-
-export class WorkDataForEmployeeDto {
-  @IsString()
-  id: string;
-
-  @IsString()
-  title: string;
 }

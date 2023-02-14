@@ -17,7 +17,7 @@ export class UserService {
     private readonly mailService: MailService,
   ) {}
 
-  async findOne(username: string): Promise<UserDto> {
+  async findOne(username: string): Promise<any> {
     return await this.userModel.findOne({ username: username });
   }
 
@@ -42,10 +42,6 @@ export class UserService {
         await user.save();
         console.log(3);
         console.log(user.id);
-        this.chatroomService.newroom(
-          await user.id,
-          await (user.firstname + ' ' + user.lastname),
-        );
         this.mailService.sendVerifyEmail(
           email,
           await user.firstname,
