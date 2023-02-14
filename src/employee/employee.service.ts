@@ -18,8 +18,21 @@ export class EmployeeService {
     return await this.employeeModel.findOne({ _id: id });
   }
 
-  async findAll(user: any, status: string): Promise<Array<EmployeeDto>> {
-    return await this.employeeModel.find({ status: status });
+  async findAll(
+    status: string,
+    sort: string,
+    order: string,
+  ): Promise<Array<Employee>> {
+    status = await (status === undefined ? 'employee' : status);
+    sort = await (sort === undefined ? 'works' : sort);
+    order = await (order === 'asc' || order === 'desc' ? order : 'desc');
+    const typeSortToOrder = {};
+    typeSortToOrder[sort] = order;
+    console.log(typeSortToOrder);
+    const filter = { status: status };
+
+    console.log(1);
+    return await this.employeeModel.find(filter).sort(typeSortToOrder);
   }
 
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {

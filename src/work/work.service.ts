@@ -14,15 +14,14 @@ export class WorkService {
 
   async findAll(
     user: any,
-    status,
-    page,
-    customerId,
-    sort,
-    order,
+    status: [string],
+    page: number,
+    customerId: string,
+    sort: string,
+    order: string,
   ): Promise<any> {
     page = await Number(page);
     page = await (page > 0 ? page : 1);
-    status = await status;
     sort = await (sort === undefined ? 'updatedAt' : sort);
     customerId = await (customerId === undefined ? 'all' : customerId);
     order = await (order === 'asc' || order === 'desc' ? order : 'desc');

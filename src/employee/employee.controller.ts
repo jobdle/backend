@@ -14,19 +14,22 @@ import {
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { EmployeeDto } from 'src/model/dto/employee.dto';
 import { ResponseMessage } from 'src/model/response';
+import { Employee } from 'src/model/schema/employee.schema';
 import { EmployeeService } from './employee.service';
 
 @Controller('employee')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
+
   @UseGuards(JwtAuthGuard)
   @Get()
   async getAll(
-    @Request() req,
     @Query('status') status: string,
-  ): Promise<Array<EmployeeDto>> {
+    @Query('sort') sort: string,
+    @Query('order') order: string,
+  ): Promise<Array<Employee>> {
     status = status === undefined ? 'employee' : status;
-    return await this.employeeService.findAll(req.user, status);
+    return await this.employeeService.findAll(status, sort, order);
   }
 
   @UseGuards(JwtAuthGuard)

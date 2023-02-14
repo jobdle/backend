@@ -1,8 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { CategoryDto } from '../dto/category.dto';
 import { EmployeeDto } from '../dto/employee.dto';
 import { Category } from './category.schema';
-import { Employee } from './employee.schema';
 
 @Schema({ timestamps: true })
 export class Work {
