@@ -31,18 +31,8 @@ export class WorkController {
     @Query('sort') sort: string,
     @Query('order') order: string,
   ): Promise<any> {
-    const a = await {
-      id: '63a0182e815d5957dbb0bae0',
-      firstname: 'admin',
-      lastname: 'admin',
-      username: 'admin',
-      password: '$2b$10$DtPj6yZ7ZHDcriC9Xi63GeuNJNTQEjdTLLS//ObNufXiXIB50OnJa',
-      role: 'admin',
-      email: 'admin@gg.com',
-    };
     return await this.workService.findAll(
-      //req.user,
-      a,
+      req.user,
       status,
       page,
       customerId,
