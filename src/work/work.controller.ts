@@ -21,7 +21,7 @@ import { WorkService } from './work.service';
 export class WorkController {
   constructor(private readonly workService: WorkService) {}
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getOneStatus(
     @Request() req,
