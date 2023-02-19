@@ -32,6 +32,7 @@ export class WorkService {
       limit: 10,
       sort: typeSortToOrder,
     };
+    console.log(typeSortToOrder);
     const filter = {};
     if (status == undefined) {
       filter['status'] = 'new';
@@ -51,6 +52,7 @@ export class WorkService {
     } else {
       filter['userId'] = await user.userId;
     }
+    console.log(filter);
 
     return await this.workModel.paginate(filter, options);
   }

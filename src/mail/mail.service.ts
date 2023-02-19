@@ -19,7 +19,7 @@ export class MailService {
     const fullName = await (firstname + ' ' + lastname);
     const token = await this.generateVerifyToken(id, fullName);
     const url = await (process.env.PUBLIC_CLIENT_URL +
-      '/token/verify?token=' +
+      '/verify?token=' +
       token);
     console.log(token);
     this.mailerService.sendMail({
