@@ -49,4 +49,8 @@ export class AuthService {
     this.chatroomService.newroom(await user.userId, await user.fullName);
     return { message: 'verify email successfully.' };
   }
+
+  async resendVerifyEmail(email: string): Promise<ResponseMessage> {
+    return await this.userService.checkUserVerifyEmailAndSend(email);
+  }
 }

@@ -74,4 +74,19 @@ export class UserService {
       throw e;
     }
   }
+
+  async checkUserVerifyEmailAndSend(email: string): Promise<ResponseMessage> {
+    const user = await this.userModel.findOne({ email: email });
+    const check = await user.verifyEmail;
+    if (check == 1) {
+      return { message: 'verify email successfully.' };
+    } else {
+      return await this.mailService.sendVerifyEmail(
+        email,
+        await user.firstname,
+        await user.lastname,
+        await user.id,
+      );
+    }
+  }
 }

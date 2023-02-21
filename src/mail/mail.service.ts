@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { JwtService } from '@nestjs/jwt';
+import { ResponseMessage } from 'src/model/response';
 //import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class MailService {
     firstname: string,
     lastname: string,
     id: string,
-  ): Promise<void> {
+  ): Promise<ResponseMessage> {
     console.log(1, email);
     const fullName = await (firstname + ' ' + lastname);
     const token = await this.generateVerifyToken(id, fullName);
@@ -48,6 +49,7 @@ export class MailService {
       //   url,
       // },
     });
+    return { message: 'send verify email successfully.' };
   }
 
   async generateVerifyToken(id: string, fullName: string): Promise<string> {

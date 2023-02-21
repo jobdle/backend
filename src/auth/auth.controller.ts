@@ -5,6 +5,7 @@ import {
   UseGuards,
   Body,
   Query,
+  Get,
 } from '@nestjs/common';
 import { UserDto } from 'src/model/dto/user.dto';
 import { ResponseMessage, ResponseToken } from 'src/model/response';
@@ -37,5 +38,10 @@ export class AuthController {
     console.log(2);
     console.log(req.user);
     return await this.authService.verifyEmail(req.user);
+  }
+
+  @Get('verify')
+  async resendVerifyEmail(email: string): Promise<ResponseMessage> {
+    return await this.authService.resendVerifyEmail(email);
   }
 }
