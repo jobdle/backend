@@ -6,6 +6,7 @@ import { ResponseMessage, ResponseToken } from 'src/model/response';
 import { UserDto } from 'src/model/dto/user.dto';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
 import { BadRequestException } from '@nestjs/common/exceptions';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -13,10 +14,11 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly chatroomService: ChatroomService,
     private jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async validateUser(username: string, password: string): Promise<UserDto> {
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findByUserName(username);
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       console.log(user.verifyEmail);
@@ -52,5 +54,18 @@ export class AuthService {
 
   async resendVerifyEmail(email: string): Promise<ResponseMessage> {
     return await this.userService.checkUserVerifyEmailAndSend(email);
+  }
+
+  async sendEmailToChancePassword(email: string): Promise<ResponseMessage> {
+    const user = await this.userService.findByEmail(email);
+    const check = await user.verifyEmail;
+    if (check) {
+      return await this.mailService.sendVerifyEmailToChancePassword(user);
+    } else {
+      return {
+        message:
+          'This account is not verify email. Please verify before reset password.',
+      };
+    }
   }
 }

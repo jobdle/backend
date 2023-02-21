@@ -17,6 +17,7 @@ require('dotenv').config();
     PassportModule.register({ session: true }),
     UserModule,
     ChatroomModule,
+    MailModule,
     JwtModule.register({
       secret: process.env.JWT_KEY,
       signOptions: { expiresIn: '3600s' },

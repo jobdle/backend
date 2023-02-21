@@ -7,6 +7,7 @@ import {
   Query,
   Get,
 } from '@nestjs/common';
+import { Patch } from '@nestjs/common/decorators';
 import { UserDto } from 'src/model/dto/user.dto';
 import { ResponseMessage, ResponseToken } from 'src/model/response';
 import { UserService } from 'src/user/user.service';
@@ -43,5 +44,19 @@ export class AuthController {
   @Get('verify')
   async resendVerifyEmail(email: string): Promise<ResponseMessage> {
     return await this.authService.resendVerifyEmail(email);
+  }
+
+  @Get('password')
+  async sendEmailToChancePassword(email: string): Promise<ResponseMessage> {
+    return await this.authService.sendEmailToChancePassword(email);
+  }
+
+  @UseGuards(VerifyEmailGuard)
+  @Patch('password')
+  async reset(
+    @Request() req,
+    @Body() password: string,
+  ): Promise<ResponseMessage> {
+    return await this.userService.resetpassword(req.user, password);
   }
 }

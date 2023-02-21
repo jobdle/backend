@@ -17,8 +17,17 @@ export class UserService {
     private readonly mailService: MailService,
   ) {}
 
-  async findOne(username: string): Promise<any> {
+  async findByEmail(email: string): Promise<any> {
+    return await this.userModel.findOne({ email: email });
+  }
+
+  async findByUserName(username: string): Promise<any> {
     return await this.userModel.findOne({ username: username });
+  }
+
+  async genHashPassword(password: string): Promise<string> {
+    const saltOrRounds = await process.env.SALTHASH;
+    return await bcrypt.hash(password, saltOrRounds);
   }
 
   async createUserAccount(data: UserDto): Promise<ResponseMessage> {
@@ -35,9 +44,7 @@ export class UserService {
         );
       } else {
         data.role = 'user';
-        const saltOrRounds = 10;
-        const hash = await bcrypt.hash(password, saltOrRounds);
-        data.password = hash;
+        data.password = await this.genHashPassword(password);
         const user = await new this.userModel(data);
         await user.save();
         console.log(3);
@@ -87,6 +94,20 @@ export class UserService {
         await user.lastname,
         await user.id,
       );
+    }
+  }
+
+  async resetpassword(user: any, password: string): Promise<ResponseMessage> {
+    try {
+      const newPassword = await this.genHashPassword(password);
+      await this.updateOneUserData(await user.userId, {
+        password: newPassword,
+      });
+      return { message: 'new password update successfully.' };
+    } catch (e) {
+      console.log('Error at resetpassword function in user.service');
+      console.log(e);
+      throw e;
     }
   }
 }
