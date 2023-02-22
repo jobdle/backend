@@ -42,12 +42,16 @@ export class AuthController {
   }
 
   @Get('verify')
-  async resendVerifyEmail(email: string): Promise<ResponseMessage> {
+  async resendVerifyEmail(
+    @Query('email') email: string,
+  ): Promise<ResponseMessage> {
     return await this.authService.resendVerifyEmail(email);
   }
 
   @Get('password')
-  async sendEmailToChancePassword(email: string): Promise<ResponseMessage> {
+  async sendEmailToChancePassword(
+    @Query('email') email: string,
+  ): Promise<ResponseMessage> {
     return await this.authService.sendEmailToChancePassword(email);
   }
 
