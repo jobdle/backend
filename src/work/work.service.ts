@@ -57,7 +57,7 @@ export class WorkService {
     return await this.workModel.paginate(filter, options);
   }
 
-  async findOne(id: string): Promise<WorkDto> {
+  async findOne(id: string): Promise<Work> {
     return await this.workModel.findOne({ _id: id });
   }
 

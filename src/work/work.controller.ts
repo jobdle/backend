@@ -15,6 +15,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
+import { Work } from 'src/model/schema/work.schema';
 import { WorkService } from './work.service';
 
 @Controller('work')
@@ -30,7 +31,7 @@ export class WorkController {
     @Query('customerId') customerId: string,
     @Query('sort') sort: string,
     @Query('order') order: string,
-  ): Promise<any> {
+  ): Promise<Work[]> {
     return await this.workService.findAll(
       req.user,
       status,
@@ -41,9 +42,10 @@ export class WorkController {
     );
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getOne(@Request() req, @Param('id') id: string): Promise<WorkDto> {
+  async getOne(@Request() req, @Param('id') id: string): Promise<Work> {
+    console.log(id);
     return await this.workService.findOne(id);
   }
 

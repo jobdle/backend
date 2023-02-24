@@ -24,7 +24,7 @@ export class CategoryService {
 
   async findOne(id: string) {
     try {
-      const category = await this.categoryModel.findOne({ id: id });
+      const category = await this.categoryModel.findOne({ _id: id });
       return category;
     } catch (e) {
       console.log('Error at findOne function in category.service');
