@@ -42,7 +42,7 @@ export class WorkController {
     );
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Request() req, @Param('id') id: string): Promise<Work> {
     console.log(id);
