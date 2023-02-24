@@ -22,6 +22,9 @@ export class User {
 
   @Prop()
   verifyEmail: number;
+
+  @Prop()
+  profileImageUrl: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
