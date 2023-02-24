@@ -57,10 +57,7 @@ export class AuthController {
 
   @UseGuards(VerifyEmailGuard)
   @Patch('password')
-  async reset(
-    @Request() req,
-    @Body() password: string,
-  ): Promise<ResponseMessage> {
-    return await this.userService.resetpassword(req.user, password);
+  async reset(@Request() req, @Body() body: any): Promise<ResponseMessage> {
+    return await this.userService.resetpassword(req.user, body.password);
   }
 }
