@@ -26,7 +26,7 @@ export class UserService {
   }
 
   async genHashPassword(password: string): Promise<string> {
-    const saltOrRounds = await process.env.SALTHASH;
+    const saltOrRounds = await Number(process.env.SALTHASH);
     return await bcrypt.hash(password, saltOrRounds);
   }
 
