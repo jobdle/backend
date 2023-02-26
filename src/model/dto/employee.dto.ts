@@ -24,4 +24,6 @@ export class EmployeeDto {
 
   @IsString()
   status: string;
+
+  profileImageUrl: string;
 }

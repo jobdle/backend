@@ -15,8 +15,8 @@ export class WorkDto {
   detail: string;
 
   @ValidateNested({ each: true }) //ตรวจไส้ในด้วย
-  @Type(() => Category) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
-  category: Category;
+  @Type(() => CategoryDto) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
+  category: CategoryDto;
 
   wage: string;
 

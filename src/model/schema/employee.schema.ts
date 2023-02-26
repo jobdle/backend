@@ -26,6 +26,9 @@ export class Employee {
 
   @Prop()
   status: string;
+
+  @Prop()
+  profileImageUrl: string;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);
