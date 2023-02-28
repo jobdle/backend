@@ -20,8 +20,6 @@ export class WorkDto {
 
   wage: string;
 
-  note: string;
-
   @IsString()
   location: string;
 

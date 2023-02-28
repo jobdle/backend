@@ -22,6 +22,7 @@ export class EmployeeService {
     status: string,
     sort: string,
     order: string,
+    search: string,
   ): Promise<Array<Employee>> {
     status = await (status === undefined ? 'employee' : status);
     sort = await (sort === undefined ? 'works' : sort);
@@ -30,6 +31,14 @@ export class EmployeeService {
     typeSortToOrder[sort] = order;
     console.log(typeSortToOrder);
     const filter = { status: status };
+
+    if (!!search) {
+      search = search.trim();
+      filter['$or'] = [
+        { firstname: { $regex: search, $options: 'i' } },
+        { lastname: { $regex: search, $options: 'i' } },
+      ];
+    }
 
     console.log(1);
     return await this.employeeModel.find(filter).sort(typeSortToOrder);

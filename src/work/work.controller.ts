@@ -31,6 +31,7 @@ export class WorkController {
     @Query('customerId') customerId: string,
     @Query('sort') sort: string,
     @Query('order') order: string,
+    @Query('search') search: string,
   ): Promise<Work[]> {
     return await this.workService.findAll(
       req.user,
@@ -39,6 +40,7 @@ export class WorkController {
       customerId,
       sort,
       order,
+      search,
     );
   }
 

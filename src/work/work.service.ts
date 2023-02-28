@@ -19,6 +19,7 @@ export class WorkService {
     customerId: string,
     sort: string,
     order: string,
+    search: string,
   ): Promise<any> {
     page = await Number(page);
     page = await (page > 0 ? page : 1);
@@ -34,15 +35,33 @@ export class WorkService {
     };
     console.log(typeSortToOrder);
     const filter = {};
+
+    const manyOr = [];
+
     if (status == undefined) {
       filter['status'] = 'new';
     } else {
-      const orStatus = [];
+      const orStatus = new Array(status.length);
       for (let i = 0; i < status.length; i++) {
         orStatus[i] = await { status: status[i] };
       }
-      filter['$or'] = orStatus;
+      manyOr[0] = { $or: orStatus };
     }
+
+    if (!!search) {
+      console.log('qqq');
+      search = search.trim();
+      manyOr[1] = {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { detail: { $regex: search, $options: 'i' } },
+          { location: { $regex: search, $options: 'i' } },
+          { fullname: { $regex: search, $options: 'i' } },
+        ],
+      };
+    }
+
+    filter['$and'] = manyOr;
 
     const role = await user.role;
     if (role == 'admin') {
@@ -52,7 +71,7 @@ export class WorkService {
     } else {
       filter['userId'] = await user.userId;
     }
-    console.log(filter);
+    //console.log(filter);
 
     return await this.workModel.paginate(filter, options);
   }

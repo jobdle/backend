@@ -21,7 +21,7 @@ export class MailService {
     const fullName = await (firstname + ' ' + lastname);
     const token = await this.generateVerifyToken(id, fullName);
     const url = await (process.env.PUBLIC_CLIENT_URL +
-      '/verify?token=' +
+      '/verify?verify_email_token=' +
       token);
     console.log(token);
     this.mailerService.sendMail({
@@ -61,7 +61,7 @@ export class MailService {
     const fullName = await (user.firstname + ' ' + user.lastname);
     const token = await this.generateVerifyToken(user.id, fullName);
     const url = await (process.env.PUBLIC_CLIENT_URL +
-      '/resetpassword?token=' +
+      'users/passwprd/edit?reset_password_token=' +
       token);
     console.log(token);
     this.mailerService.sendMail({

@@ -27,9 +27,10 @@ export class EmployeeController {
     @Query('status') status: string,
     @Query('sort') sort: string,
     @Query('order') order: string,
+    @Query('search') search: string,
   ): Promise<Array<Employee>> {
     status = status === undefined ? 'employee' : status;
-    return await this.employeeService.findAll(status, sort, order);
+    return await this.employeeService.findAll(status, sort, order, search);
   }
 
   @UseGuards(JwtAuthGuard)

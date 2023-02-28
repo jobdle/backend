@@ -17,10 +17,7 @@ export class Work {
   category: Category;
 
   @Prop()
-  wage: string;
-
-  @Prop()
-  note: string;
+  wage: number;
 
   @Prop()
   location: string;
