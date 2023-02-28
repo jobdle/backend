@@ -13,7 +13,7 @@ require('dotenv').config();
     JwtModule.register({
       //เวิคละชีวิต
       secret: process.env.JWT_EMAIL_KEY,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '3s' },
     }),
     MailerModule.forRoot({
       transport: {

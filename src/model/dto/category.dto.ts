@@ -6,4 +6,7 @@ export class CategoryDto {
 
   @IsNumber()
   minWage: number;
+
+  @IsString()
+  color: string;
 }

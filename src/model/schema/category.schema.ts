@@ -9,6 +9,9 @@ export class Category {
   minWage: number;
 
   @Prop()
+  color: string;
+
+  @Prop()
   deleteAt: Date | null;
 }
 
