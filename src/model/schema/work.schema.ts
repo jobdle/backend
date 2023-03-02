@@ -14,6 +14,9 @@ export class Work {
   detail: string;
 
   @Prop()
+  tel: string;
+
+  @Prop()
   category: Category;
 
   @Prop()
