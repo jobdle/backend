@@ -36,7 +36,7 @@ export class AuthService {
       username: user.username,
       sub: user._id,
       role: user.role,
-      fullname: await ((await user.firstname) + ' ' + (await user.lastname)),
+      fullname: user.fullName,
     };
     console.log(payload);
     return await {

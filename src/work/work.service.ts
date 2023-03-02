@@ -115,4 +115,12 @@ export class WorkService {
       throw e;
     }
   }
+
+  async updateUserFullname(userId: string, fullname: string) {
+    await this.workModel.updateMany(
+      { userId: userId },
+      { fullname: fullname },
+      { timestamps: false },
+    );
+  }
 }

@@ -9,6 +9,9 @@ export class User {
   lastname: string;
 
   @Prop()
+  fullname: string;
+
+  @Prop()
   username: string;
 
   @Prop()

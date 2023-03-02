@@ -8,6 +8,8 @@ export class EmployeeDto {
   @IsString()
   lastname: string;
 
+  fullname: string;
+
   @IsString()
   tel: string;
 

@@ -47,6 +47,7 @@ export class EmployeeService {
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {
     try {
       body['status'] = 'employee';
+      body['fullname'] = body.fristname + ' ' + body.lastname;
       const employee = await new this.employeeModel(body);
       employee.save();
       return { message: 'Add new employee successfully.' };
@@ -71,11 +72,28 @@ export class EmployeeService {
 
   async updateOneEmployee(id: any, body: any): Promise<any> {
     try {
+      if (body.firstname || body.lastname) {
+        body = await this.getAndUpdateFullname(id, body);
+      }
       return await this.employeeModel.updateOne({ _id: id }, body);
     } catch (e) {
       console.log('Error at updateWork function in employee.service');
       console.log(e);
       throw e;
     }
+  }
+
+  async getAndUpdateFullname(id: string, body: any) {
+    if (body.firstname && body.lastname) {
+      body['fullname'] = await (body.firstname + ' ' + body.lastname);
+    } else {
+      const em = await this.employeeModel.findOne({ _id: id });
+      if (body.fristname) {
+        body['fullname'] = await (body.firstname + ' ' + em.lastname);
+      } else {
+        body['fullname'] = await (em.firstname + ' ' + body.lastname);
+      }
+    }
+    return await body;
   }
 }

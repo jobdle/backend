@@ -15,7 +15,9 @@ export class ChatroomService {
   async getroom(user: any) {
     //return await this.chatroomModel.find();
     if (user.role == 'admin') {
-      return await this.chatroomModel.find();
+      return await this.chatroomModel.find().sort({
+        updatedAt: 'desc',
+      });
     }
     return await this.chatroomModel.findOne({ userId: user.userId });
   }
@@ -67,5 +69,13 @@ export class ChatroomService {
     } else {
       return await chatroom.messages[idx - 1];
     }
+  }
+
+  async updateUserFullname(userId: string, fullname: string) {
+    await this.chatroomModel.updateOne(
+      { userId: userId },
+      { nameOfUser: fullname },
+      { timestamps: false },
+    );
   }
 }

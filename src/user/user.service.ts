@@ -8,14 +8,20 @@ import { ResponseMessage } from 'src/model/response';
 import { UserDto } from 'src/model/dto/user.dto';
 import { User } from 'src/model/schema/user.schema';
 import { MailService } from 'src/mail/mail.service';
+import { WorkService } from 'src/work/work.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel('User') private readonly userModel: Model<User>,
     private readonly chatroomService: ChatroomService,
+    private readonly workService: WorkService,
     private readonly mailService: MailService,
   ) {}
+
+  async findById(id: string): Promise<any> {
+    return await this.userModel.findOne({ _id: id });
+  }
 
   async findByEmail(email: string): Promise<any> {
     return await this.userModel.findOne({ email: email });
@@ -44,6 +50,7 @@ export class UserService {
         );
       } else {
         data.role = 'user';
+        data.fullname = data.firstname + ' ' + data.lastname;
         data.password = await this.genHashPassword(password);
         const user = await new this.userModel(data);
         await user.save();
@@ -51,8 +58,7 @@ export class UserService {
         console.log(user.id);
         this.mailService.sendVerifyEmail(
           email,
-          await user.firstname,
-          await user.lastname,
+          await user.fullname,
           await user.id,
         );
         return {
@@ -71,8 +77,27 @@ export class UserService {
     return user;
   }
 
+  async getAndUpdateFullname(id: string, body: any) {
+    if (body.firstname && body.lastname) {
+      body['fullname'] = await (body.firstname + ' ' + body.lastname);
+    } else {
+      const user = await this.findById(id);
+      if (body.fristname) {
+        body['fullname'] = await (body.firstname + ' ' + user.lastname);
+      } else {
+        body['fullname'] = await (user.firstname + ' ' + body.lastname);
+      }
+    }
+    this.chatroomService.updateUserFullname(id, body.fullname);
+    this.workService.updateUserFullname(id, body.fullname);
+    return await body;
+  }
+
   async updateOneUserData(id: string, body: any): Promise<ResponseMessage> {
     try {
+      if (body.firstname || body.lastname) {
+        body = await this.getAndUpdateFullname(id, body);
+      }
       await this.userModel.updateOne({ _id: id }, body);
       return { message: 'Account update successfully.' };
     } catch (e) {
@@ -90,8 +115,7 @@ export class UserService {
     } else {
       return await this.mailService.sendVerifyEmail(
         email,
-        await user.firstname,
-        await user.lastname,
+        await user.fullname,
         await user.id,
       );
     }

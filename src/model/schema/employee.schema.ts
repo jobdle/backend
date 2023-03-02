@@ -10,6 +10,9 @@ export class Employee {
   lastname: string;
 
   @Prop()
+  fullname: string;
+
+  @Prop()
   tel: string;
 
   @Prop()

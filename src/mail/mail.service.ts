@@ -13,13 +13,11 @@ export class MailService {
   ) {} //ใส่authละแตกงงดี
   async sendVerifyEmail(
     email: string,
-    firstname: string,
-    lastname: string,
+    fullname: string,
     id: string,
   ): Promise<ResponseMessage> {
     console.log(1, email);
-    const fullName = await (firstname + ' ' + lastname);
-    const token = await this.generateVerifyToken(id, fullName);
+    const token = await this.generateVerifyToken(id, fullname);
     const url = await (process.env.PUBLIC_CLIENT_URL +
       '/verify?verify_email_token=' +
       token);
@@ -36,14 +34,7 @@ export class MailService {
       //   ' click ' +
       //   url +
       //   ' for verify your email.', // plaintext body
-      html:
-        'Hello ' +
-        firstname +
-        ' ' +
-        lastname +
-        ' click ' +
-        url +
-        ' for verify your email.', // plaintext body
+      html: 'Hello ' + fullname + ' click ' + url + ' for verify your email.', // plaintext body
       // template: './confirmation',
       // context: {
       //   name: firstname + ' ' + lastname,
@@ -58,7 +49,7 @@ export class MailService {
   }
 
   async sendVerifyEmailToChancePassword(user: any): Promise<ResponseMessage> {
-    const fullName = await (user.firstname + ' ' + user.lastname);
+    const fullName = user.fullname;
     const token = await this.generateVerifyToken(user.id, fullName);
     const url = await (process.env.PUBLIC_CLIENT_URL +
       '/users/passwprd/edit?reset_password_token=' +
@@ -68,14 +59,7 @@ export class MailService {
       to: user.email, // list of receivers
       from: process.env.EMAIL, // sender address
       subject: 'Reset password in ' + process.env.APP_NAME, // Subject line
-      html:
-        'Hello ' +
-        user.firstname +
-        ' ' +
-        user.lastname +
-        ' click ' +
-        url +
-        ' for reset password.', // plaintext body
+      html: 'Hello ' + user.fullName + ' click ' + url + ' for reset password.', // plaintext body
       // template: './confirmation',
       // context: {
       //   name: firstname + ' ' + lastname,

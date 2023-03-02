@@ -31,13 +31,3 @@ export class MessageDto {
   @IsISO8601()
   timeStamp: Date;
 }
-
-export class ChatroomDto {
-  @IsString()
-  userId: string;
-
-  @IsArray()
-  @ValidateNested({ each: true }) //ตรวจไส้ในด้วย
-  @Type(() => MessageDto) //เน็ตบอกว่าเพื่อข้างบนไม่ติดมั้ง
-  messages: MessageDto[];
-}
