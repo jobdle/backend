@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsISO8601 } from 'class-validator';
 import { Work } from '../schema/work.schema';
 
 export class EmployeeDto {
@@ -16,8 +16,8 @@ export class EmployeeDto {
   @IsString()
   email: string;
 
-  @IsNumber()
-  age: number;
+  @IsISO8601()
+  birthday: Date;
 
   @IsString()
   gender: string;

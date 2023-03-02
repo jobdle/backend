@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel } from 'mongoose';
 import 'mongoose-paginate-v2';
+import { EmployeeService } from 'src/employee/employee.service';
 import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
 import { Work } from 'src/model/schema/work.schema';
@@ -10,6 +11,7 @@ import { Work } from 'src/model/schema/work.schema';
 export class WorkService {
   constructor(
     @InjectModel('Work') private readonly workModel: PaginateModel<Work>,
+    private readonly employeeService: EmployeeService,
   ) {}
 
   async findAll(
@@ -76,7 +78,7 @@ export class WorkService {
     return await this.workModel.paginate(filter, options);
   }
 
-  async findOne(id: string): Promise<Work> {
+  async findById(id: string): Promise<Work> {
     return await this.workModel.findOne({ _id: id });
   }
 
@@ -97,6 +99,10 @@ export class WorkService {
   async updateWork(id: string, body: any): Promise<ResponseMessage> {
     try {
       await this.workModel.updateOne({ _id: id }, body);
+      if (body.status == 'done') {
+        const work = await this.findById(id);
+        this.employeeService.updateDoneWork(work);
+      }
       return { message: 'This work update successfully.' };
     } catch (e) {
       console.log('Error at updateWork function in work.service');

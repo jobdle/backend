@@ -96,4 +96,14 @@ export class EmployeeService {
     }
     return await body;
   }
+
+  async updateDoneWork(work: any) {
+    for (let i = 0; i < work.employee.length; i++) {
+      const employeeId = await work.employee[i]._id;
+      await this.employeeModel.updateOne(
+        { _id: employeeId },
+        { $push: { works: work } },
+      );
+    }
+  }
 }

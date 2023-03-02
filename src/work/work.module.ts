@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
+import { EmployeeModule } from 'src/employee/employee.module';
 import { WorkSchema } from 'src/model/schema/work.schema';
 import { WorkController } from './work.controller';
 import { WorkService } from './work.service';
@@ -19,6 +20,7 @@ import { WorkService } from './work.service';
       },
     ]),
     WorkModule,
+    EmployeeModule,
   ],
   controllers: [WorkController],
   providers: [WorkService, JwtStrategy],

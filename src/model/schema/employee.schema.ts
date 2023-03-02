@@ -13,6 +13,9 @@ export class Employee {
   fullname: string;
 
   @Prop()
+  birthday: Date;
+
+  @Prop()
   tel: string;
 
   @Prop()
