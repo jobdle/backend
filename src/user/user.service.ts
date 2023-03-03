@@ -79,17 +79,17 @@ export class UserService {
 
   async getAndUpdateFullname(id: string, body: any) {
     if (body.firstname && body.lastname) {
-      body['fullname'] = await (body.firstname + ' ' + body.lastname);
+      body['fullname'] = (await body.firstname) + ' ' + (await body.lastname);
     } else {
       const user = await this.findById(id);
       if (body.fristname) {
-        body['fullname'] = await (body.firstname + ' ' + user.lastname);
+        body['fullname'] = (await body.firstname) + ' ' + (await user.lastname);
       } else {
-        body['fullname'] = await (user.firstname + ' ' + body.lastname);
+        body['fullname'] = (await user.firstname) + ' ' + (await body.lastname);
       }
     }
-    this.chatroomService.updateUserFullname(id, body.fullname);
-    this.workService.updateUserFullname(id, body.fullname);
+    this.chatroomService.updateUserFullname(id, await body.fullname);
+    this.workService.updateUserFullname(id, await body.fullname);
     return await body;
   }
 

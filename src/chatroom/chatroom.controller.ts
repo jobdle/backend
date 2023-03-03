@@ -23,8 +23,8 @@ export class ChatroomController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getroom(@Request() req) {
-    return await this.chatroomService.getroom(req.user);
+  async getroom(@Request() req, @Query('search') search: string) {
+    return await this.chatroomService.getroom(req.user, search);
   }
 
   @UseGuards(JwtAuthGuard)

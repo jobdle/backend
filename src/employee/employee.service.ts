@@ -34,10 +34,7 @@ export class EmployeeService {
 
     if (!!search) {
       search = search.trim();
-      filter['$or'] = [
-        { firstname: { $regex: search, $options: 'i' } },
-        { lastname: { $regex: search, $options: 'i' } },
-      ];
+      filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
     }
 
     console.log(1);
@@ -47,7 +44,7 @@ export class EmployeeService {
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {
     try {
       body['status'] = 'employee';
-      body['fullname'] = body.fristname + ' ' + body.lastname;
+      body['fullname'] = await (body.fristname + ' ' + body.lastname);
       const employee = await new this.employeeModel(body);
       employee.save();
       return { message: 'Add new employee successfully.' };
@@ -72,7 +69,7 @@ export class EmployeeService {
 
   async updateOneEmployee(id: any, body: any): Promise<any> {
     try {
-      if (body.firstname || body.lastname) {
+      if ((await body.firstname) || (await body.lastname)) {
         body = await this.getAndUpdateFullname(id, body);
       }
       return await this.employeeModel.updateOne({ _id: id }, body);
@@ -84,14 +81,14 @@ export class EmployeeService {
   }
 
   async getAndUpdateFullname(id: string, body: any) {
-    if (body.firstname && body.lastname) {
-      body['fullname'] = await (body.firstname + ' ' + body.lastname);
+    if ((await body.firstname) && (await body.lastname)) {
+      body['fullname'] = (await body.firstname) + ' ' + (await body.lastname);
     } else {
       const em = await this.employeeModel.findOne({ _id: id });
       if (body.fristname) {
-        body['fullname'] = await (body.firstname + ' ' + em.lastname);
+        body['fullname'] = (await body.firstname) + ' ' + (await em.lastname);
       } else {
-        body['fullname'] = await (em.firstname + ' ' + body.lastname);
+        body['fullname'] = (await em.firstname) + ' ' + (await body.lastname);
       }
     }
     return await body;

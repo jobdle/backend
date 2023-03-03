@@ -35,7 +35,7 @@ export class CategoryService {
 
   async newCategory(user: any, body: CategoryDto): Promise<ResponseMessage> {
     try {
-      const name = await body.name;
+      const name = body.name;
       const checkName = await this.categoryModel.findOne({
         name: name,
         deleteAt: null,
@@ -43,7 +43,7 @@ export class CategoryService {
       if (checkName) {
         throw new BadRequestException('This category name is already used.');
       }
-      const category = await new this.categoryModel(body);
+      const category = new this.categoryModel(body);
       category.save();
       return { message: 'Add new category successfully.' };
     } catch (e) {
@@ -55,7 +55,7 @@ export class CategoryService {
 
   async softDelete(id: string): Promise<ResponseMessage> {
     try {
-      const body = await { deleteAt: new Date() };
+      const body = { deleteAt: new Date() };
       await this.categoryModel.updateOne({ _id: id }, body);
       return { message: 'Delete category successfully.' };
     } catch (e) {

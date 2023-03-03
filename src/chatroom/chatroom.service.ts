@@ -12,10 +12,15 @@ export class ChatroomService {
     @InjectModel('Chatroom') private readonly chatroomModel: Model<Chatroom>,
   ) {}
 
-  async getroom(user: any) {
+  async getroom(user: any, search: string) {
     //return await this.chatroomModel.find();
     if (user.role == 'admin') {
-      return await this.chatroomModel.find().sort({
+      const filter = {};
+      if (!!search) {
+        search = search.trim();
+        filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
+      }
+      return await this.chatroomModel.find(filter).sort({
         updatedAt: 'desc',
       });
     }
