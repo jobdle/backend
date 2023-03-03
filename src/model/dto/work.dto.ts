@@ -31,4 +31,6 @@ export class WorkDto {
   deadline: Date;
 
   employee: [Employee];
+
+  pictureUrl: [string];
 }

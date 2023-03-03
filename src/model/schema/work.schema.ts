@@ -36,6 +36,9 @@ export class Work {
 
   @Prop([EmployeeDto])
   employee: [EmployeeDto];
+
+  @Prop()
+  pictureUrl: [string];
 }
 
 export const WorkSchema = SchemaFactory.createForClass(Work);
