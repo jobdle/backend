@@ -95,6 +95,7 @@ export class WorkService {
       body['userId'] = await user.userId;
       body['fullname'] = await user.fullname;
       body['status'] = await 'new';
+      console.log(body);
       const work = await new this.workModel(body);
       return await work.save();
     } catch (e) {

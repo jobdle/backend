@@ -37,7 +37,7 @@ export class Work {
   @Prop([EmployeeDto])
   employee: [EmployeeDto];
 
-  @Prop()
+  @Prop([String])
   pictureUrl: [string];
 }
 
