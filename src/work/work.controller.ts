@@ -58,6 +58,7 @@ export class WorkController {
     @Request() req,
     @Body() body: WorkDto,
   ): Promise<ResponseMessage> {
+    console.log(req.user.fullname, body);
     return await this.workService.newWork(req.user, body);
   }
 
@@ -83,6 +84,6 @@ export class WorkController {
     @Body() body: any,
     @Param('id') id: string,
   ): Promise<any> {
-    return await this.workService.updateWork(id, body);
+    return await this.workService.updateWork(req.user, id, body);
   }
 }

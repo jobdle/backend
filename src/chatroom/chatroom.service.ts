@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ChatGateWayService } from 'src/chatGateWay/chatGateWay.service';
 import { MessageDto, MessageForDataDto } from 'src/model/dto/chatroom.dto';
 import { ResponseMessage } from 'src/model/response';
 import { Chatroom } from 'src/model/schema/chatroom.schema';
@@ -11,6 +12,10 @@ export class ChatroomService {
   constructor(
     @InjectModel('Chatroom') private readonly chatroomModel: Model<Chatroom>,
   ) {}
+
+  async findByUserId(userId: string) {
+    return await this.chatroomModel.findOne({ userId: userId });
+  }
 
   async getroom(user: any, search: string) {
     //return await this.chatroomModel.find();

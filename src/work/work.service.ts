@@ -1,17 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PaginateModel } from 'mongoose';
 import 'mongoose-paginate-v2';
+import { ChatGateWayService } from 'src/chatGateWay/chatGateWay.service';
+import { ChatroomService } from 'src/chatroom/chatroom.service';
 import { EmployeeService } from 'src/employee/employee.service';
+import { MailService } from 'src/mail/mail.service';
 import { WorkDto } from 'src/model/dto/work.dto';
 import { ResponseMessage } from 'src/model/response';
 import { Work } from 'src/model/schema/work.schema';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class WorkService {
   constructor(
     @InjectModel('Work') private readonly workModel: PaginateModel<Work>,
     private readonly employeeService: EmployeeService,
+    private readonly chatroomService: ChatroomService,
+    private readonly chatGateWayService: ChatGateWayService,
+    private readonly mailService: MailService,
+    @Inject(forwardRef(() => UserService)) private userService: UserService,
   ) {}
 
   async findAll(
@@ -96,12 +104,53 @@ export class WorkService {
     }
   }
 
-  async updateWork(id: string, body: any): Promise<ResponseMessage> {
+  async updateWorkMessage(
+    workId: string,
+    senderId: string,
+    userId: string,
+    sender: string,
+  ) {
+    const room = await this.chatroomService.findByUserId(userId);
+    const messageContent = await {
+      roomId: await room.id,
+      content: {
+        sender: sender,
+        senderId: senderId,
+        content_type: 'work',
+        content: workId,
+        timeStamp: new Date(),
+      },
+    };
+    await this.chatGateWayService.updateWorkMessage(messageContent);
+  }
+
+  async sendEmailUpdateWork(userId: string, workId: string) {
+    const user = await this.userService.findById(userId);
+    await this.mailService.sendEmailUpdateWork(
+      user.email,
+      workId,
+      user.fullname,
+    );
+  }
+
+  async updateWork(
+    user: any,
+    workId: string,
+    body: any,
+  ): Promise<ResponseMessage> {
     try {
-      await this.workModel.updateOne({ _id: id }, body);
+      const work = await this.workModel.findOneAndUpdate({ _id: workId }, body);
       if (body.status == 'done') {
-        const work = await this.findById(id);
         this.employeeService.updateDoneWork(work);
+      }
+      this.updateWorkMessage(
+        workId,
+        user.userId,
+        await work.userId,
+        await user.fullname,
+      );
+      if (user.role == 'admin') {
+        this.sendEmailUpdateWork(work.userId, workId);
       }
       return { message: 'This work update successfully.' };
     } catch (e) {

@@ -3,7 +3,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { ChatGateway } from './chat.gateway';
 import { ChatroomModule } from './chatroom/chatroom.module';
 import { EmployeeModule } from './employee/employee.module';
 import { UserModule } from './user/user.module';
@@ -12,6 +11,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { CategoryModule } from './category/category.module';
 import { MailModule } from './mail/mail.module';
+import { ChatGateWayModule } from './chatGateWay/chatGateWay.module';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
@@ -48,8 +48,9 @@ require('dotenv').config();
     EmployeeModule,
     ChatroomModule,
     CategoryModule,
+    ChatGateWayModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ChatGateway],
+  providers: [AppService],
 })
 export class AppModule {}

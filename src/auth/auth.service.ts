@@ -36,7 +36,7 @@ export class AuthService {
       username: user.username,
       sub: user._id,
       role: user.role,
-      fullname: user.fullName,
+      fullname: user.fullname,
     };
     console.log(payload);
     return await {
@@ -48,7 +48,7 @@ export class AuthService {
     const userId = await user.userId;
     const body = await { verifyEmail: 1 };
     await this.userService.updateOneUserData(userId, body);
-    this.chatroomService.newroom(await user.userId, await user.fullName);
+    this.chatroomService.newroom(await user.userId, await user.fullname);
     return { message: 'verify email successfully.' };
   }
 

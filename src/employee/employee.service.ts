@@ -95,6 +95,8 @@ export class EmployeeService {
   }
 
   async updateDoneWork(work: any) {
+    console.log('5');
+    console.log(await work.employee);
     for (let i = 0; i < work.employee.length; i++) {
       const employeeId = await work.employee[i]._id;
       await this.employeeModel.updateOne(

@@ -7,11 +7,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { ChatroomService } from './chatroom/chatroom.service';
-import { MessageForDataDto } from './model/dto/chatroom.dto';
+import { ChatroomService } from 'src/chatroom/chatroom.service';
+import { MessageForDataDto } from 'src/model/dto/chatroom.dto';
 
 @WebSocketGateway({ cors: { credentials: true } })
-export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class ChatGateWayService
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer()
   server;
 
@@ -34,6 +36,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     },
   ) {
     console.log('SEND DATA SUCCESS : ' + messageContent.content.content);
+    await this.updateWorkMessage(messageContent);
+  }
+
+  async updateWorkMessage(messageContent: {
+    roomId: string;
+    content: {
+      sender: string;
+      senderId: string;
+      content_type: string;
+      content: string;
+      timeStamp: Date;
+    };
+  }) {
     this.server.to(messageContent.roomId).emit('message', messageContent);
     const body: MessageForDataDto = await {
       roomId: messageContent.roomId,
