@@ -28,6 +28,9 @@ export class User {
 
   @Prop()
   profileImageUrl: string;
+
+  @Prop()
+  tel: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
