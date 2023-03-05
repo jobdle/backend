@@ -9,7 +9,8 @@ export class UserDto {
 
   fullname: null | string;
 
-  tel: null | string;
+  @IsString()
+  tel: string;
 
   @IsString()
   username: string;
