@@ -23,7 +23,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getUser(@Query() id: string): Promise<any> {
+  async getUser(@Request() req, @Query() id: string): Promise<any> {
     return await this.userService.getOneUserData(id);
   }
 
