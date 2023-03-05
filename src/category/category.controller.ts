@@ -51,14 +51,4 @@ export class CategoryController {
   ): Promise<ResponseMessage> {
     return await this.categoryService.softDelete(id);
   }
-
-  //@UseGuards(JwtAuthGuard)
-  // @Patch(':id')
-  // async patchOne(
-  //   @Request() req,
-  //   @Body() body: any,
-  //   @Param('id') id: string,
-  // ): Promise<any> {
-  //   return await this.categoryService.updateOneCategory(id, body);
-  // }
 }
