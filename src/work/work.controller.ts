@@ -58,7 +58,7 @@ export class WorkController {
     @Request() req,
     @Body() body: WorkDto,
   ): Promise<ResponseMessage> {
-    console.log(req.user.fullname, body);
+    console.log(body);
     return await this.workService.newWork(req.user, body);
   }
 

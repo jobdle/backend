@@ -52,7 +52,7 @@ export class MailService {
     const fullname = user.fullname;
     const token = await this.generateVerifyToken(user.id, fullname);
     const url = await (process.env.PUBLIC_CLIENT_URL +
-      '/users/passwprd/edit?reset_password_token=' +
+      '/users/password/edit?reset_password_token=' +
       token);
     console.log(token);
     this.mailerService.sendMail({
