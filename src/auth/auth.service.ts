@@ -17,8 +17,8 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<UserDto> {
-    const user = await this.userService.findByUserName(username);
+  async validateUser(email: string, password: string): Promise<UserDto> {
+    const user = await this.userService.findByEmail(email);
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       console.log(user.verifyEmail);
@@ -33,7 +33,7 @@ export class AuthService {
   async login(user: any): Promise<ResponseToken> {
     console.log(user);
     const payload = await {
-      username: user.username,
+      email: user.email,
       sub: user._id,
       role: user.role,
       fullname: user.fullname,

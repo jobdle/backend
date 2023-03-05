@@ -13,9 +13,6 @@ export class UserDto {
   tel: string;
 
   @IsString()
-  username: string;
-
-  @IsString()
   password: string;
 
   @IsString()

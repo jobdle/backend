@@ -27,10 +27,6 @@ export class UserService {
     return await this.userModel.findOne({ email: email });
   }
 
-  async findByUserName(username: string): Promise<any> {
-    return await this.userModel.findOne({ username: username });
-  }
-
   async genHashPassword(password: string): Promise<string> {
     const saltOrRounds = await Number(process.env.SALTHASH);
     return await bcrypt.hash(password, saltOrRounds);
@@ -39,15 +35,11 @@ export class UserService {
   async createUserAccount(data: UserDto): Promise<ResponseMessage> {
     try {
       console.log('register');
-      const { username, password, email } = data;
-      const checkEmail = await this.userModel.findOne({
-        $or: [{ email: email }, { username: username }],
-      });
+      const { password, email } = data;
+      const checkEmail = await this.userModel.findOne({ email: email });
       console.log(checkEmail);
       if (checkEmail) {
-        throw new BadRequestException(
-          'This email or username is already used.',
-        );
+        throw new BadRequestException('This email is already used.');
       } else {
         data.role = 'user';
         data.fullname = data.firstname + ' ' + data.lastname;
