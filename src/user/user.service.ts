@@ -39,24 +39,27 @@ export class UserService {
       const checkEmail = await this.userModel.findOne({ email: email });
       console.log(checkEmail);
       if (checkEmail) {
-        throw new BadRequestException('This email is already used.');
-      } else {
-        data.role = 'user';
-        data.fullname = data.firstname + ' ' + data.lastname;
-        data.password = await this.genHashPassword(password);
-        const user = await new this.userModel(data);
-        await user.save();
-        console.log(3);
-        console.log(user.id);
-        this.mailService.sendVerifyEmail(
-          email,
-          await user.fullname,
-          await user.id,
-        );
-        return {
-          message: 'Account created successfully. You must verify email.',
-        };
+        if (!!checkEmail.verifyEmail) {
+          await this.userModel.deleteOne({ email: email });
+        } else {
+          throw new BadRequestException('This email is already used.');
+        }
       }
+      data.role = 'user';
+      data.fullname = data.firstname + ' ' + data.lastname;
+      data.password = await this.genHashPassword(password);
+      const user = await new this.userModel(data);
+      await user.save();
+      console.log(3);
+      console.log(user.id);
+      this.mailService.sendVerifyEmail(
+        email,
+        await user.fullname,
+        await user.id,
+      );
+      return {
+        message: 'Account created successfully. You must verify email.',
+      };
     } catch (e) {
       console.log('Error at createUserAccount function in user.service');
       console.log(e);
