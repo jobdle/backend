@@ -14,6 +14,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { EmployeeDto } from 'src/model/dto/employee.dto';
 import { ResponseMessage } from 'src/model/response';
+import { Category } from 'src/model/schema/category.schema';
 import { Employee } from 'src/model/schema/employee.schema';
 import { EmployeeService } from './employee.service';
 
@@ -21,16 +22,23 @@ import { EmployeeService } from './employee.service';
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get()
   async getAll(
     @Query('status') status: string,
     @Query('sort') sort: string,
     @Query('order') order: string,
     @Query('search') search: string,
+    @Query('category') category: string,
   ): Promise<Array<Employee>> {
     status = status === undefined ? 'employee' : status;
-    return await this.employeeService.findAll(status, sort, order, search);
+    return await this.employeeService.findAll(
+      status,
+      sort,
+      order,
+      search,
+      category,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

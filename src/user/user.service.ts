@@ -34,10 +34,8 @@ export class UserService {
 
   async createUserAccount(data: UserDto): Promise<ResponseMessage> {
     try {
-      console.log('register');
       const { password, email } = data;
       const checkEmail = await this.userModel.findOne({ email: email });
-      console.log(checkEmail);
       if (checkEmail) {
         if (!!checkEmail.verifyEmail) {
           await this.userModel.deleteOne({ email: email });
@@ -50,8 +48,6 @@ export class UserService {
       data.password = await this.genHashPassword(password);
       const user = await new this.userModel(data);
       await user.save();
-      console.log(3);
-      console.log(user.id);
       this.mailService.sendVerifyEmail(
         email,
         await user.fullname,

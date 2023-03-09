@@ -35,7 +35,6 @@ export class ChatGateWayService
       };
     },
   ) {
-    console.log('SEND DATA SUCCESS : ' + messageContent.content.content);
     await this.updateWorkMessage(messageContent);
   }
 
@@ -63,7 +62,6 @@ export class ChatGateWayService
   @SubscribeMessage('joinroom')
   async JoinRoom(client: Socket, roomId: string) {
     client.join(roomId);
-    console.log('JOINROOM :' + roomId);
     //this.server.emit('joinroom', room);
   }
 

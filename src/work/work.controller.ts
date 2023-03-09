@@ -47,7 +47,6 @@ export class WorkController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Request() req, @Param('id') id: string): Promise<Work> {
-    console.log(id);
     return await this.workService.findById(id);
   }
 
@@ -58,7 +57,6 @@ export class WorkController {
     @Request() req,
     @Body() body: WorkDto,
   ): Promise<ResponseMessage> {
-    console.log('1', body);
     return await this.workService.newWork(req.user, body);
   }
 

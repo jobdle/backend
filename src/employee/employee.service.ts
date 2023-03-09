@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 import 'mongoose-paginate-v2';
 import { ResponseMessage } from 'src/model/response';
 import { Employee } from 'src/model/schema/employee.schema';
-import { EmployeeDto } from 'src/model/dto/employee.dto';
+import { EmployeeDto, WorkDoneDto } from 'src/model/dto/employee.dto';
 
 @Injectable()
 export class EmployeeService {
@@ -23,13 +23,18 @@ export class EmployeeService {
     sort: string,
     order: string,
     search: string,
+    category: string,
   ): Promise<Array<Employee>> {
     status = await (status === undefined ? 'employee' : status);
     sort = await (sort === undefined ? 'works' : sort);
     order = await (order === 'asc' || order === 'desc' ? order : 'desc');
     const typeSortToOrder = {};
-    typeSortToOrder[sort] = order;
-    console.log(typeSortToOrder);
+    if (!!category) {
+      const categoryFrequency = await ('categoryFrequency.' + category);
+      typeSortToOrder[categoryFrequency] = order;
+    } else {
+      typeSortToOrder[sort] = order;
+    }
     const filter = { status: status };
 
     if (!!search) {
@@ -37,12 +42,12 @@ export class EmployeeService {
       filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
     }
 
-    console.log(1);
     return await this.employeeModel.find(filter).sort(typeSortToOrder);
   }
 
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {
     try {
+      body['categoryFrequency'] = {};
       body['status'] = 'employee';
       body['fullname'] = await (body.fristname + ' ' + body.lastname);
       const employee = await new this.employeeModel(body);
@@ -95,13 +100,22 @@ export class EmployeeService {
   }
 
   async updateDoneWork(work: any) {
-    console.log('5');
-    console.log(await work.employee);
-    for (let i = 0; i < work.employee.length; i++) {
+    const length = await work.employee.length;
+    const workDone: WorkDoneDto = await {
+      userId: work.userId,
+      title: work.title,
+      workId: work._id,
+      status: work.status,
+    };
+    for (let i = 0; i < length; i++) {
       const employeeId = await work.employee[i]._id;
+      const categoryName = await work.category.name;
+      const categoryFrequency = 'categoryFrequency.' + categoryName;
+      const inc = {};
+      inc[categoryFrequency] = 1;
       await this.employeeModel.updateOne(
         { _id: employeeId },
-        { $push: { works: work } },
+        { $push: { works: workDone }, $inc: inc },
       );
     }
   }

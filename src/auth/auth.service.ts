@@ -24,7 +24,6 @@ export class AuthService {
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      console.log(user.verifyEmail);
       if (!user.verifyEmail) {
         throw new BadRequestException('please verify account in your email.');
       }
@@ -34,14 +33,12 @@ export class AuthService {
   }
 
   async login(user: any): Promise<ResponseToken> {
-    console.log(user);
     const payload = await {
       email: user.email,
       sub: user._id,
       role: user.role,
       fullname: user.fullname,
     };
-    console.log(payload);
     return await {
       accessToken: this.jwtService.sign(payload),
     };

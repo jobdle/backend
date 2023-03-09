@@ -43,7 +43,6 @@ export class WorkService {
       limit: 10,
       sort: typeSortToOrder,
     };
-    console.log(typeSortToOrder);
     const filter = {};
 
     const manyOr = [];
@@ -59,7 +58,6 @@ export class WorkService {
     }
 
     if (!!search) {
-      console.log('qqq');
       search = search.trim();
       manyOr[1] = {
         $or: [
@@ -81,7 +79,6 @@ export class WorkService {
     } else {
       filter['userId'] = await user.userId;
     }
-    //console.log(filter);
 
     return await this.workModel.paginate(filter, options);
   }
@@ -139,7 +136,14 @@ export class WorkService {
     body: any,
   ): Promise<ResponseMessage> {
     try {
-      const work = await this.workModel.findOneAndUpdate({ _id: workId }, body);
+      const employees = await body.employee;
+      if (!!employees) {
+        for (let i = 0; i < employees.length; i++) {
+          await delete body.employee[i].work;
+        }
+      }
+      await this.workModel.updateOne({ _id: workId }, body);
+      const work = await this.workModel.findOne({ _id: workId });
       if (body.status == 'done') {
         this.employeeService.updateDoneWork(work);
       }

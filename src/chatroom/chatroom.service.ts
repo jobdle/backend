@@ -33,7 +33,6 @@ export class ChatroomService {
   }
 
   async newroom(userId: string, fullname: string): Promise<void> {
-    console.log(userId);
     const checkroom = await this.chatroomModel.findOne({
       userId: userId,
     });
@@ -45,12 +44,10 @@ export class ChatroomService {
         idxMessage: 0,
       });
       newRoom.save();
-      console.log('Create Newroom Success');
     }
   }
 
   async addMessage(body: MessageForDataDto): Promise<ResponseMessage> {
-    console.log(body);
     const message: MessageDto = await {
       senderId: body.senderId,
       content_type: body.content_type,
@@ -64,7 +61,6 @@ export class ChatroomService {
         { _id: body.roomId },
         { $push: { messages: message }, lastIndexMessage: lastIndexMessage },
       );
-      console.log('New message Succes');
       return { message: 'New message Succes' };
     }
     throw new BadRequestException('This roomId is not find.');

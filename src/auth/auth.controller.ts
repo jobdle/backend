@@ -36,8 +36,6 @@ export class AuthController {
   @UseGuards(VerifyEmailGuard)
   @Post('verify')
   async verifyEmail(@Request() req): Promise<ResponseMessage> {
-    console.log(2);
-    console.log(req.user);
     return await this.authService.verifyEmail(req.user);
   }
 

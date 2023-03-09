@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { WorkDoneDto } from '../dto/employee.dto';
 import { Work } from './work.schema';
 
 @Schema({ timestamps: true })
@@ -27,14 +28,20 @@ export class Employee {
   @Prop()
   gender: string;
 
-  @Prop([Work])
-  works: Work[];
+  @Prop([WorkDoneDto])
+  works: WorkDoneDto[];
 
   @Prop()
   status: string;
 
   @Prop()
   profileImageUrl: string;
+
+  @Prop({
+    type: Map,
+    of: Number,
+  })
+  categoryFrequency: object;
 }
 
 export const EmployeeSchema = SchemaFactory.createForClass(Employee);

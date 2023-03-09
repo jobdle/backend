@@ -16,12 +16,10 @@ export class MailService {
     fullname: string,
     id: string,
   ): Promise<ResponseMessage> {
-    console.log(1, email);
     const token = await this.generateVerifyToken(id, fullname);
     const url = await (process.env.PUBLIC_CLIENT_URL +
       '/verify?verify_email_token=' +
       token);
-    console.log(token);
     this.mailerService.sendMail({
       to: email, // list of receivers
       from: process.env.EMAIL, // sender address
@@ -54,7 +52,6 @@ export class MailService {
     const url = await (process.env.PUBLIC_CLIENT_URL +
       '/users/password/edit?reset_password_token=' +
       token);
-    console.log(token);
     this.mailerService.sendMail({
       to: user.email, // list of receivers
       from: process.env.EMAIL, // sender address
