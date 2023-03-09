@@ -71,12 +71,6 @@ export class WorkController {
     return await this.workService.softDelete(id);
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Put()
-  // async putOne(@Request() req, @Body() body: any): Promise<any> {
-  //   return await this.workService.putWork(req.user, body);
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async patchOne(

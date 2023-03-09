@@ -28,6 +28,12 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get()
+  async getAll(@Request() req): Promise<any> {
+    return await this.userService.getAll();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch('profile')
   async updateProfile(
     @Request() req,
