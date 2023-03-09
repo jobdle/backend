@@ -32,5 +32,6 @@ export class WorkDto {
 
   employee: [Employee];
 
+  @IsArray()
   pictureUrl: [string];
 }
