@@ -49,7 +49,9 @@ export class EmployeeService {
     try {
       body['categoryFrequency'] = {};
       body['status'] = 'employee';
-      body['fullname'] = await (body.fristname + ' ' + body.lastname);
+      body['fullname'] = await ((await body.fristname) +
+        ' ' +
+        (await body.lastname));
       const employee = await new this.employeeModel(body);
       employee.save();
       return { message: 'Add new employee successfully.' };

@@ -44,7 +44,7 @@ export class UserService {
         }
       }
       data.role = 'user';
-      data.fullname = data.firstname + ' ' + data.lastname;
+      data.fullname = (await data.firstname) + ' ' + (await data.lastname);
       data.password = await this.genHashPassword(password);
       const user = await new this.userModel(data);
       await user.save();
