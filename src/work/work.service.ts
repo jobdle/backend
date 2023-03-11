@@ -182,4 +182,10 @@ export class WorkService {
       { timestamps: false },
     );
   }
+
+  async findForCalendar(): Promise<Work[]> {
+    return await this.workModel
+      .find({ status: 'pending' })
+      .sort({ deadline: 'asc' });
+  }
 }

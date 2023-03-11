@@ -45,6 +45,13 @@ export class WorkController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('/calendar')
+  async getForCalendar(): Promise<Work[]> {
+    console.log('1');
+    return await this.workService.findForCalendar();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getOne(@Request() req, @Param('id') id: string): Promise<Work> {
     return await this.workService.findById(id);
