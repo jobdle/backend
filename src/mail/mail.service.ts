@@ -43,6 +43,7 @@ export class MailService {
   }
 
   async generateVerifyToken(id: string, fullname: string): Promise<string> {
+    console.log(id, fullname);
     return await this.jwtService.sign({ userId: id, fullname: fullname });
   }
 

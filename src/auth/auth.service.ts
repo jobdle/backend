@@ -59,14 +59,17 @@ export class AuthService {
 
   async sendEmailToChancePassword(email: string): Promise<ResponseMessage> {
     const user = await this.userService.findByEmail(email);
-    const check = await user.verifyEmail;
-    if (check) {
-      return await this.mailService.sendVerifyEmailToChancePassword(user);
-    } else {
-      return {
-        message:
+    if (user) {
+      const check = await user.verifyEmail;
+      if (check) {
+        return await this.mailService.sendVerifyEmailToChancePassword(user);
+      } else {
+        throw new BadRequestException(
           'This account is not verify email. Please verify before reset password.',
-      };
+        );
+      }
+    } else {
+      throw new BadRequestException('no account create by this email');
     }
   }
 }

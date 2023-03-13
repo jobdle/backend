@@ -8,6 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { changePasswordDto } from 'src/model/dto/user.dto';
 import { ResponseMessage } from 'src/model/response';
 import { UserService } from './user.service';
 
@@ -40,5 +41,14 @@ export class UserController {
     @Body() body: any,
   ): Promise<ResponseMessage> {
     return await this.userService.updateOneUserData(req.user.userId, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('password')
+  async changePassword(
+    @Request() req,
+    @Body() body: changePasswordDto,
+  ): Promise<ResponseMessage> {
+    return await this.userService.changePassword(req.user.userId, body);
   }
 }

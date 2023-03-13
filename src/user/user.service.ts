@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
 import { ResponseMessage } from 'src/model/response';
-import { UserDto } from 'src/model/dto/user.dto';
+import { changePasswordDto, UserDto } from 'src/model/dto/user.dto';
 import { User } from 'src/model/schema/user.schema';
 import { MailService } from 'src/mail/mail.service';
 import { WorkService } from 'src/work/work.service';
@@ -126,6 +126,30 @@ export class UserService {
       return { message: 'new password update successfully.' };
     } catch (e) {
       console.log('Error at resetpassword function in user.service');
+      console.log(e);
+      throw e;
+    }
+  }
+
+  async changePassword(
+    userId: string,
+    body: changePasswordDto,
+  ): Promise<ResponseMessage> {
+    try {
+      const user = await this.findById(userId);
+      const isMatch = await bcrypt.compare(body.oldPassword, user.password);
+      if (isMatch) {
+        console.log('asas');
+        const newPassword = await this.genHashPassword(body.newPassword);
+        await this.updateOneUserData(await userId, {
+          password: newPassword,
+        });
+        return { message: 'change password update successfully.' };
+      } else {
+        throw new BadRequestException('old password is incorrect');
+      }
+    } catch (e) {
+      console.log('Error at changePassword function in user.service');
       console.log(e);
       throw e;
     }

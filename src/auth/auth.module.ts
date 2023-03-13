@@ -20,7 +20,7 @@ require('dotenv').config();
     MailModule,
     JwtModule.register({
       secret: process.env.JWT_KEY,
-      signOptions: { expiresIn: '3600s' },
+      signOptions: { expiresIn: '86400s' },
     }),
   ],
   controllers: [AuthController],

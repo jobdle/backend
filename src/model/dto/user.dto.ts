@@ -20,3 +20,11 @@ export class UserDto {
 
   role: null | string;
 }
+
+export class changePasswordDto {
+  @IsString()
+  oldPassword: string;
+
+  @IsString()
+  newPassword: string;
+}
