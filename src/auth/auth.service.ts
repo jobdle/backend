@@ -45,6 +45,7 @@ export class AuthService {
   }
 
   async verifyEmail(user: any): Promise<ResponseMessage> {
+    console.log(user);
     const userId = await user.userId;
     const body = await { verifyEmail: 1 };
     await this.userService.updateOneUserData(userId, body);
