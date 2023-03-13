@@ -18,7 +18,6 @@ export class VerifyEmailStrategy extends PassportStrategy(
   }
 
   async validate(payload: any) {
-    console.log('12');
     return await {
       userId: payload.userId,
       fullname: payload.fullname,

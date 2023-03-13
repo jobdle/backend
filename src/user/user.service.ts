@@ -139,7 +139,6 @@ export class UserService {
       const user = await this.findById(userId);
       const isMatch = await bcrypt.compare(body.oldPassword, user.password);
       if (isMatch) {
-        console.log('asas');
         const newPassword = await this.genHashPassword(body.newPassword);
         await this.updateOneUserData(await userId, {
           password: newPassword,
