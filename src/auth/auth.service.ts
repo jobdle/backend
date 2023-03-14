@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { ResponseMessage, ResponseToken } from 'src/model/response';
-import { UserDto } from 'src/model/dto/user.dto';
 import { ChatroomService } from 'src/chatroom/chatroom.service';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { MailService } from 'src/mail/mail.service';

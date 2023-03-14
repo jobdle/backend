@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, PaginateModel } from 'mongoose';
-import * as bcrypt from 'bcrypt';
+import { PaginateModel } from 'mongoose';
 import 'mongoose-paginate-v2';
 import { ResponseMessage } from 'src/model/response';
 import { Employee } from 'src/model/schema/employee.schema';

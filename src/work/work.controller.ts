@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   HttpCode,
-  Put,
   Delete,
   Patch,
   UseGuards,

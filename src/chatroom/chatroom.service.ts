@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ChatGateWayService } from 'src/chatGateWay/chatGateWay.service';
 import { MessageDto, MessageForDataDto } from 'src/model/dto/chatroom.dto';
 import { ResponseMessage } from 'src/model/response';
 import { Chatroom } from 'src/model/schema/chatroom.schema';

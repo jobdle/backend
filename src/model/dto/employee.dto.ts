@@ -1,6 +1,4 @@
 import { IsString, IsISO8601 } from 'class-validator';
-import { Work } from '../schema/work.schema';
-import { CategoryDto } from './category.dto';
 
 export class EmployeeDto {
   @IsString()

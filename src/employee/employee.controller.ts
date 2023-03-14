@@ -14,7 +14,6 @@ import {
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { EmployeeDto } from 'src/model/dto/employee.dto';
 import { ResponseMessage } from 'src/model/response';
-import { Category } from 'src/model/schema/category.schema';
 import { Employee } from 'src/model/schema/employee.schema';
 import { EmployeeService } from './employee.service';
 

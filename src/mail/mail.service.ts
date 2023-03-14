@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { JwtService } from '@nestjs/jwt';
 import { ResponseMessage } from 'src/model/response';
-import { User } from 'src/model/schema/user.schema';
 
 @Injectable()
 export class MailService {

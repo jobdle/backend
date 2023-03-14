@@ -2,7 +2,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthModule } from 'src/auth/auth.module';
 import { MailController } from './mail.controller';
 import { MailService } from './mail.service';
 // eslint-disable-next-line @typescript-eslint/no-var-requires

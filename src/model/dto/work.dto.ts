@@ -1,9 +1,7 @@
 import { IsString, IsArray, IsISO8601, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Category } from '../schema/category.schema';
 import { Employee } from '../schema/employee.schema';
 import { CategoryDto } from './category.dto';
-import { EmployeeDto } from './employee.dto';
 
 export class WorkDto {
   userId: string;

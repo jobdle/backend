@@ -3,14 +3,11 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Query,
   Request,
   UseGuards,
   Delete,
   HttpCode,
   Param,
-  Patch,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { CategoryDto } from 'src/model/dto/category.dto';
