@@ -27,12 +27,17 @@ export class ChatroomService {
       if (user.role == 'admin') {
         const filter = {};
         if (!!search) {
-          search = search.trim();
-          filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
+          filter['$or'] = await [
+            { fullname: { $regex: search, $options: 'i' } },
+          ];
+          return await this.chatroomModel.find(filter).sort({
+            updatedAt: 'desc',
+          });
+        } else {
+          return await this.chatroomModel.find(filter).sort({
+            updatedAt: 'desc',
+          });
         }
-        return await this.chatroomModel.find(filter).sort({
-          updatedAt: 'desc',
-        });
       }
       return await this.chatroomModel.findOne({ userId: user.userId });
     } catch (e) {
