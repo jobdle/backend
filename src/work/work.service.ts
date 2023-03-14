@@ -121,17 +121,19 @@ export class WorkService {
   ) {
     try {
       const room = await this.chatroomService.findByUserId(userId);
-      const messageContent = await {
-        roomId: await room.id,
-        content: {
-          sender: sender,
-          senderId: senderId,
-          content_type: 'work',
-          content: workId,
-          timeStamp: new Date(),
-        },
-      };
-      await this.chatGateWayService.updateWorkMessage(messageContent);
+      if (room) {
+        const messageContent = await {
+          roomId: await room.id,
+          content: {
+            sender: sender,
+            senderId: senderId,
+            content_type: 'work',
+            content: workId,
+            timeStamp: new Date(),
+          },
+        };
+        await this.chatGateWayService.updateWorkMessage(messageContent);
+      }
     } catch (e) {
       console.log('Error at updateWorkMessage function in work.service');
       console.log(e);
