@@ -20,7 +20,7 @@ export class CategoryController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAll(@Request() req): Promise<Array<CategoryDto>> {
+  async getAll(): Promise<Array<CategoryDto>> {
     return await this.categoryService.findAll();
   }
 

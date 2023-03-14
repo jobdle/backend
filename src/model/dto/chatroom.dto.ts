@@ -1,4 +1,4 @@
-import { IsString, IsArray, ValidateNested, IsISO8601 } from 'class-validator';
+import { IsString, IsISO8601 } from 'class-validator';
 
 export class MessageForDataDto {
   @IsString()

@@ -30,7 +30,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getAll(@Request() req): Promise<any> {
+  async getAll(): Promise<any> {
     return await this.userService.getAll();
   }
 
