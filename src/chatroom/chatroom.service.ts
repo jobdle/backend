@@ -28,7 +28,7 @@ export class ChatroomService {
         const filter = {};
         if (!!search) {
           filter['$or'] = await [
-            { fullname: { $regex: search, $options: 'i' } },
+            { nameOfUser: { $regex: search, $options: 'i' } },
           ];
           return await this.chatroomModel.find(filter).sort({
             updatedAt: 'desc',
