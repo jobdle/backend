@@ -11,9 +11,8 @@ require('dotenv').config();
 @Module({
   imports: [
     JwtModule.register({
-      //เวิคละชีวิต
       secret: process.env.JWT_EMAIL_KEY,
-      signOptions: { expiresIn: '600s' }, //10mn
+      signOptions: { expiresIn: '600s' },
     }),
     MailerModule.forRoot({
       transport: {
@@ -32,14 +31,13 @@ require('dotenv').config();
       preview: true,
       template: {
         dir: __dirname + '/template/',
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
         },
       },
     }),
     MailModule,
-    //AuthModule,
   ],
   controllers: [MailController],
   providers: [MailService],

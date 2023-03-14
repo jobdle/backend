@@ -35,7 +35,13 @@ export class ChatGateWayService
       };
     },
   ) {
-    await this.updateWorkMessage(messageContent);
+    try {
+      await this.updateWorkMessage(messageContent);
+    } catch (e) {
+      console.log('Error at handleMessage function in chatGateWay.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async updateWorkMessage(messageContent: {
@@ -48,21 +54,32 @@ export class ChatGateWayService
       timeStamp: Date;
     };
   }) {
-    this.server.to(messageContent.roomId).emit('message', messageContent);
-    const body: MessageForDataDto = await {
-      roomId: messageContent.roomId,
-      senderId: messageContent.content.senderId,
-      content_type: messageContent.content.content_type,
-      content: messageContent.content.content,
-      timeStamp: messageContent.content.timeStamp,
-    };
-    await this.chatroomService.addMessage(body);
+    try {
+      this.server.to(messageContent.roomId).emit('message', messageContent);
+      const body: MessageForDataDto = await {
+        roomId: messageContent.roomId,
+        senderId: messageContent.content.senderId,
+        content_type: messageContent.content.content_type,
+        content: messageContent.content.content,
+        timeStamp: messageContent.content.timeStamp,
+      };
+      await this.chatroomService.addMessage(body);
+    } catch (e) {
+      console.log('Error at updateWorkMessage function in chatGateWay.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   @SubscribeMessage('joinroom')
   async JoinRoom(client: Socket, roomId: string) {
-    client.join(roomId);
-    //this.server.emit('joinroom', room);
+    try {
+      client.join(roomId);
+    } catch (e) {
+      console.log('Error at SubscribeMessage function in chatGateWay.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   handleConnection() {

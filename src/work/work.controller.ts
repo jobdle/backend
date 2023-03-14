@@ -72,7 +72,7 @@ export class WorkController {
     @Request() req,
     @Param('id') id: string,
   ): Promise<ResponseMessage> {
-    return await this.workService.softDelete(id);
+    return await this.workService.softDelete(id, req.user);
   }
 
   @UseGuards(JwtAuthGuard)

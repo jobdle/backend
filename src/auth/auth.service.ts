@@ -18,58 +18,90 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string) {
-    const user = await this.userService.findByEmail(email);
-    if (!user) {
-      return null;
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (isMatch) {
-      if (!user.verifyEmail) {
-        throw new BadRequestException('please verify account in your email.');
+    try {
+      const user = await this.userService.findByEmail(email);
+      if (!user) {
+        return null;
       }
-      return user;
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        if (!user.verifyEmail) {
+          throw new BadRequestException('please verify account in your email.');
+        }
+        return user;
+      }
+      return null;
+    } catch (e) {
+      console.log('Error at validateUser function in auth.service');
+      console.log(e);
+      throw e;
     }
-    return null;
   }
 
   async login(user: any): Promise<ResponseToken> {
-    const payload = await {
-      email: user.email,
-      sub: user._id,
-      role: user.role,
-      fullname: user.fullname,
-    };
-    return await {
-      accessToken: this.jwtService.sign(payload),
-    };
+    try {
+      const payload = await {
+        email: user.email,
+        sub: user._id,
+        role: user.role,
+        fullname: user.fullname,
+      };
+      return await {
+        accessToken: this.jwtService.sign(payload),
+      };
+    } catch (e) {
+      console.log('Error at login function in auth.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async verifyEmail(user: any): Promise<ResponseMessage> {
-    console.log(user);
-    const userId = await user.userId;
-    const body = await { verifyEmail: 1 };
-    await this.userService.updateOneUserData(userId, body);
-    this.chatroomService.newroom(await user.userId, await user.fullname);
-    return { message: 'verify email successfully.' };
+    try {
+      console.log(user);
+      const userId = await user.userId;
+      const body = await { verifyEmail: 1 };
+      await this.userService.updateOneUserData(userId, body);
+      this.chatroomService.newroom(await user.userId, await user.fullname);
+      return { message: 'verify email successfully.' };
+    } catch (e) {
+      console.log('Error at verifyEmail function in auth.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async resendVerifyEmail(email: string): Promise<ResponseMessage> {
-    return await this.userService.checkUserVerifyEmailAndSend(email);
+    try {
+      return await this.userService.checkUserVerifyEmailAndSend(email);
+    } catch (e) {
+      console.log('Error at resendVerifyEmaill function in auth.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async sendEmailToChancePassword(email: string): Promise<ResponseMessage> {
-    const user = await this.userService.findByEmail(email);
-    if (user) {
-      const check = await user.verifyEmail;
-      if (check) {
-        return await this.mailService.sendVerifyEmailToChancePassword(user);
+    try {
+      const user = await this.userService.findByEmail(email);
+      if (user) {
+        const check = await user.verifyEmail;
+        if (check) {
+          return await this.mailService.sendVerifyEmailToChancePassword(user);
+        } else {
+          throw new BadRequestException(
+            'This account is not verify email. Please verify before reset password.',
+          );
+        }
       } else {
-        throw new BadRequestException(
-          'This account is not verify email. Please verify before reset password.',
-        );
+        throw new BadRequestException('no account create by this email');
       }
-    } else {
-      throw new BadRequestException('no account create by this email');
+    } catch (e) {
+      console.log(
+        'Error at sendEmailToChancePassword function in auth.service',
+      );
+      console.log(e);
+      throw e;
     }
   }
 }

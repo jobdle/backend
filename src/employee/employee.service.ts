@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PaginateModel } from 'mongoose';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as bcrypt from 'bcrypt';
 import 'mongoose-paginate-v2';
 import { ResponseMessage } from 'src/model/response';
@@ -15,7 +14,13 @@ export class EmployeeService {
     private readonly employeeModel: PaginateModel<Employee>,
   ) {}
   async findOne(id: string): Promise<EmployeeDto> {
-    return await this.employeeModel.findOne({ _id: id });
+    try {
+      return await this.employeeModel.findOne({ _id: id });
+    } catch (e) {
+      console.log('Error at findOne function in employee.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async findAll(
@@ -25,24 +30,30 @@ export class EmployeeService {
     search: string,
     category: string,
   ): Promise<Array<Employee>> {
-    status = await (status === undefined ? 'employee' : status);
-    sort = await (sort === undefined ? 'works' : sort);
-    order = await (order === 'asc' || order === 'desc' ? order : 'desc');
-    const typeSortToOrder = {};
-    if (!!category) {
-      const categoryFrequency = await ('categoryFrequency.' + category);
-      typeSortToOrder[categoryFrequency] = order;
-    } else {
-      typeSortToOrder[sort] = order;
-    }
-    const filter = { status: status };
+    try {
+      status = await (status === undefined ? 'employee' : status);
+      sort = await (sort === undefined ? 'works' : sort);
+      order = await (order === 'asc' || order === 'desc' ? order : 'desc');
+      const typeSortToOrder = {};
+      if (!!category) {
+        const categoryFrequency = await ('categoryFrequency.' + category);
+        typeSortToOrder[categoryFrequency] = order;
+      } else {
+        typeSortToOrder[sort] = order;
+      }
+      const filter = { status: status };
 
-    if (!!search) {
-      search = search.trim();
-      filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
-    }
+      if (!!search) {
+        search = search.trim();
+        filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
+      }
 
-    return await this.employeeModel.find(filter).sort(typeSortToOrder);
+      return await this.employeeModel.find(filter).sort(typeSortToOrder);
+    } catch (e) {
+      console.log('Error at findAll function in employee.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async newEmployee(user: any, body: any): Promise<ResponseMessage> {
@@ -88,37 +99,49 @@ export class EmployeeService {
   }
 
   async getAndUpdateFullname(id: string, body: any) {
-    if ((await body.firstname) && (await body.lastname)) {
-      body['fullname'] = (await body.firstname) + ' ' + (await body.lastname);
-    } else {
-      const em = await this.employeeModel.findOne({ _id: id });
-      if (body.fristname) {
-        body['fullname'] = (await body.firstname) + ' ' + (await em.lastname);
+    try {
+      if ((await body.firstname) && (await body.lastname)) {
+        body['fullname'] = (await body.firstname) + ' ' + (await body.lastname);
       } else {
-        body['fullname'] = (await em.firstname) + ' ' + (await body.lastname);
+        const em = await this.employeeModel.findOne({ _id: id });
+        if (body.fristname) {
+          body['fullname'] = (await body.firstname) + ' ' + (await em.lastname);
+        } else {
+          body['fullname'] = (await em.firstname) + ' ' + (await body.lastname);
+        }
       }
+      return await body;
+    } catch (e) {
+      console.log('Error at getAndUpdateFullname function in employee.service');
+      console.log(e);
+      throw e;
     }
-    return await body;
   }
 
   async updateDoneWork(work: any) {
-    const length = await work.employee.length;
-    const workDone: WorkDoneDto = await {
-      userId: work.userId,
-      title: work.title,
-      workId: work._id,
-      status: work.status,
-    };
-    for (let i = 0; i < length; i++) {
-      const employeeId = await work.employee[i]._id;
-      const categoryName = await work.category.name;
-      const categoryFrequency = 'categoryFrequency.' + categoryName;
-      const inc = {};
-      inc[categoryFrequency] = 1;
-      await this.employeeModel.updateOne(
-        { _id: employeeId },
-        { $push: { works: workDone }, $inc: inc },
-      );
+    try {
+      const length = await work.employee.length;
+      const workDone: WorkDoneDto = await {
+        userId: work.userId,
+        title: work.title,
+        workId: work._id,
+        status: work.status,
+      };
+      for (let i = 0; i < length; i++) {
+        const employeeId = await work.employee[i]._id;
+        const categoryName = await work.category.name;
+        const categoryFrequency = 'categoryFrequency.' + categoryName;
+        const inc = {};
+        inc[categoryFrequency] = 1;
+        await this.employeeModel.updateOne(
+          { _id: employeeId },
+          { $push: { works: workDone }, $inc: inc },
+        );
+      }
+    } catch (e) {
+      console.log('Error at updateDoneWork function in employee.service');
+      console.log(e);
+      throw e;
     }
   }
 }

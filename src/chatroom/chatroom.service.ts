@@ -14,36 +14,53 @@ export class ChatroomService {
   ) {}
 
   async findByUserId(userId: string) {
-    return await this.chatroomModel.findOne({ userId: userId });
+    try {
+      return await this.chatroomModel.findOne({ userId: userId });
+    } catch (e) {
+      console.log('Error at findByUserId function in chatroom.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async getroom(user: any, search: string) {
-    //return await this.chatroomModel.find();
-    if (user.role == 'admin') {
-      const filter = {};
-      if (!!search) {
-        search = search.trim();
-        filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
+    try {
+      if (user.role == 'admin') {
+        const filter = {};
+        if (!!search) {
+          search = search.trim();
+          filter['$or'] = [{ fullname: { $regex: search, $options: 'i' } }];
+        }
+        return await this.chatroomModel.find(filter).sort({
+          updatedAt: 'desc',
+        });
       }
-      return await this.chatroomModel.find(filter).sort({
-        updatedAt: 'desc',
-      });
+      return await this.chatroomModel.findOne({ userId: user.userId });
+    } catch (e) {
+      console.log('Error at getroom function in chatroom.service');
+      console.log(e);
+      throw e;
     }
-    return await this.chatroomModel.findOne({ userId: user.userId });
   }
 
   async newroom(userId: string, fullname: string): Promise<void> {
-    const checkroom = await this.chatroomModel.findOne({
-      userId: userId,
-    });
-    if (!checkroom) {
-      const newRoom = await new this.chatroomModel({
-        nameOfUser: fullname,
+    try {
+      const checkroom = await this.chatroomModel.findOne({
         userId: userId,
-        messages: [],
-        idxMessage: 0,
       });
-      newRoom.save();
+      if (!checkroom) {
+        const newRoom = await new this.chatroomModel({
+          nameOfUser: fullname,
+          userId: userId,
+          messages: [],
+          idxMessage: 0,
+        });
+        newRoom.save();
+      }
+    } catch (e) {
+      console.log('Error at newroom function in chatroom.service');
+      console.log(e);
+      throw e;
     }
   }
 
@@ -54,34 +71,52 @@ export class ChatroomService {
       content: body.content,
       timeStamp: new Date(),
     };
-    const checkroom = await this.chatroomModel.findOne({ _id: body.roomId });
-    if (checkroom) {
-      const lastIndexMessage = await checkroom.messages.length;
-      await this.chatroomModel.updateOne(
-        { _id: body.roomId },
-        { $push: { messages: message }, lastIndexMessage: lastIndexMessage },
-      );
-      return { message: 'New message Succes' };
+    try {
+      const checkroom = await this.chatroomModel.findOne({ _id: body.roomId });
+      if (checkroom) {
+        const lastIndexMessage = await checkroom.messages.length;
+        await this.chatroomModel.updateOne(
+          { _id: body.roomId },
+          { $push: { messages: message }, lastIndexMessage: lastIndexMessage },
+        );
+        return { message: 'New message Succes' };
+      }
+      throw new BadRequestException('This roomId is not find.');
+    } catch (e) {
+      console.log('Error at addMessage function in chatroom.service');
+      console.log(e);
+      throw e;
     }
-    throw new BadRequestException('This roomId is not find.');
   }
 
   async lastMessage(roomId: string) {
-    const chatroom = await this.chatroomModel.findOne({ _id: roomId });
-    if (!chatroom) return [];
-    const idx = await chatroom.messages.length;
-    if (idx == 0) {
-      return [];
-    } else {
-      return await chatroom.messages[idx - 1];
+    try {
+      const chatroom = await this.chatroomModel.findOne({ _id: roomId });
+      if (!chatroom) return [];
+      const idx = await chatroom.messages.length;
+      if (idx == 0) {
+        return [];
+      } else {
+        return await chatroom.messages[idx - 1];
+      }
+    } catch (e) {
+      console.log('Error at lastMessage function in chatroom.service');
+      console.log(e);
+      throw e;
     }
   }
 
   async updateUserFullname(userId: string, fullname: string) {
-    await this.chatroomModel.updateOne(
-      { userId: userId },
-      { nameOfUser: fullname },
-      { timestamps: false },
-    );
+    try {
+      await this.chatroomModel.updateOne(
+        { userId: userId },
+        { nameOfUser: fullname },
+        { timestamps: false },
+      );
+    } catch (e) {
+      console.log('Error at updateUserFullname function in chatroom.service');
+      console.log(e);
+      throw e;
+    }
   }
 }

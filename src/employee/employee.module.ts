@@ -8,17 +8,6 @@ import { EmployeeService } from './employee.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'Employee', schema: EmployeeSchema }]),
-    // MongooseModule.forFeatureAsync([
-    //   {
-    //     name: 'Employee',
-    //     useFactory: () => {
-    //       const schema = EmployeeSchema;
-    //       // eslint-disable-next-line @typescript-eslint/no-var-requires
-    //       schema.plugin(require('mongoose-paginate-v2'));
-    //       return schema;
-    //     },
-    //   },
-    // ]),
     EmployeeModule,
   ],
   controllers: [EmployeeController],

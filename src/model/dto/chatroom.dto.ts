@@ -6,7 +6,7 @@ export class MessageForDataDto {
   roomId: string;
 
   @IsString()
-  senderId: string; //userId?
+  senderId: string;
 
   @IsString()
   content_type: string;
@@ -20,7 +20,7 @@ export class MessageForDataDto {
 
 export class MessageDto {
   @IsString()
-  senderId: string; //userId?
+  senderId: string;
 
   @IsString()
   content_type: string;

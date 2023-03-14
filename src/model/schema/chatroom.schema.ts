@@ -7,7 +7,7 @@ export class Chatroom {
   nameOfUser: string;
 
   @Prop()
-  userId: string; //เลขห้อง
+  userId: string;
 
   @Prop([MessageDto])
   messages: MessageDto[];

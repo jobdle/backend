@@ -31,60 +31,72 @@ export class WorkService {
     order: string,
     search: string,
   ): Promise<any> {
-    page = await Number(page);
-    page = await (page > 0 ? page : 1);
-    sort = await (sort === undefined ? 'updatedAt' : sort);
-    customerId = await (customerId === undefined ? 'all' : customerId);
-    order = await (order === 'asc' || order === 'desc' ? order : 'desc');
-    const typeSortToOrder = {};
-    typeSortToOrder[sort] = order;
-    const options = {
-      page: page,
-      limit: 10,
-      sort: typeSortToOrder,
-    };
-    const filter = {};
-
-    const manyOr = [];
-
-    if (status == undefined) {
-      filter['status'] = 'new';
-    } else {
-      const orStatus = new Array(status.length);
-      for (let i = 0; i < status.length; i++) {
-        orStatus[i] = await { status: status[i] };
-      }
-      manyOr[0] = { $or: orStatus };
-    }
-
-    if (!!search) {
-      search = search.trim();
-      manyOr[1] = {
-        $or: [
-          { title: { $regex: search, $options: 'i' } },
-          { detail: { $regex: search, $options: 'i' } },
-          { location: { $regex: search, $options: 'i' } },
-          { fullname: { $regex: search, $options: 'i' } },
-        ],
+    try {
+      page = await Number(page);
+      page = await (page > 0 ? page : 1);
+      sort = await (sort === undefined ? 'updatedAt' : sort);
+      customerId = await (customerId === undefined ? 'all' : customerId);
+      order = await (order === 'asc' || order === 'desc' ? order : 'desc');
+      const typeSortToOrder = {};
+      typeSortToOrder[sort] = order;
+      const options = {
+        page: page,
+        limit: 10,
+        sort: typeSortToOrder,
       };
-    }
+      const filter = {};
 
-    filter['$and'] = manyOr;
+      const manyOr = [];
 
-    const role = await user.role;
-    if (role == 'admin') {
-      if (customerId != 'all') {
-        filter['userId'] = await customerId;
+      if (status == undefined) {
+        filter['status'] = 'new';
+      } else {
+        const orStatus = new Array(status.length);
+        for (let i = 0; i < status.length; i++) {
+          orStatus[i] = await { status: status[i] };
+        }
+        manyOr[0] = { $or: orStatus };
       }
-    } else {
-      filter['userId'] = await user.userId;
-    }
 
-    return await this.workModel.paginate(filter, options);
+      if (!!search) {
+        search = search.trim();
+        manyOr[1] = {
+          $or: [
+            { title: { $regex: search, $options: 'i' } },
+            { detail: { $regex: search, $options: 'i' } },
+            { location: { $regex: search, $options: 'i' } },
+            { fullname: { $regex: search, $options: 'i' } },
+          ],
+        };
+      }
+
+      filter['$and'] = manyOr;
+
+      const role = await user.role;
+      if (role == 'admin') {
+        if (customerId != 'all') {
+          filter['userId'] = await customerId;
+        }
+      } else {
+        filter['userId'] = await user.userId;
+      }
+
+      return await this.workModel.paginate(filter, options);
+    } catch (e) {
+      console.log('Error at findAll function in work.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async findById(id: string): Promise<Work> {
-    return await this.workModel.findOne({ _id: id });
+    try {
+      return await this.workModel.findOne({ _id: id });
+    } catch (e) {
+      console.log('Error at findById function in work.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async newWork(user: any, body: WorkDto): Promise<any> {
@@ -107,27 +119,39 @@ export class WorkService {
     userId: string,
     sender: string,
   ) {
-    const room = await this.chatroomService.findByUserId(userId);
-    const messageContent = await {
-      roomId: await room.id,
-      content: {
-        sender: sender,
-        senderId: senderId,
-        content_type: 'work',
-        content: workId,
-        timeStamp: new Date(),
-      },
-    };
-    await this.chatGateWayService.updateWorkMessage(messageContent);
+    try {
+      const room = await this.chatroomService.findByUserId(userId);
+      const messageContent = await {
+        roomId: await room.id,
+        content: {
+          sender: sender,
+          senderId: senderId,
+          content_type: 'work',
+          content: workId,
+          timeStamp: new Date(),
+        },
+      };
+      await this.chatGateWayService.updateWorkMessage(messageContent);
+    } catch (e) {
+      console.log('Error at updateWorkMessage function in work.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async sendEmailUpdateWork(userId: string, workId: string) {
-    const user = await this.userService.findById(userId);
-    await this.mailService.sendEmailUpdateWork(
-      user.email,
-      workId,
-      user.fullname,
-    );
+    try {
+      const user = await this.userService.findById(userId);
+      await this.mailService.sendEmailUpdateWork(
+        user.email,
+        workId,
+        user.fullname,
+      );
+    } catch (e) {
+      console.log('Error at sendEmailUpdateWork function in work.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async updateWork(
@@ -164,9 +188,18 @@ export class WorkService {
     }
   }
 
-  async softDelete(id: string): Promise<ResponseMessage> {
+  async softDelete(id: string, user: any): Promise<ResponseMessage> {
     try {
-      await this.workModel.updateOne({ _id: id }, { status: 'cancel' });
+      const work = await this.workModel.findOneAndUpdate(
+        { _id: id },
+        { status: 'cancel' },
+      );
+      this.updateWorkMessage(
+        id,
+        user.userId,
+        await work.userId,
+        await user.fullname,
+      );
       return { message: 'This work cancel successfully.' };
     } catch (e) {
       console.log('Error at softDelete function in work.service');
@@ -176,16 +209,28 @@ export class WorkService {
   }
 
   async updateUserFullname(userId: string, fullname: string) {
-    await this.workModel.updateMany(
-      { userId: userId },
-      { fullname: fullname },
-      { timestamps: false },
-    );
+    try {
+      await this.workModel.updateMany(
+        { userId: userId },
+        { fullname: fullname },
+        { timestamps: false },
+      );
+    } catch (e) {
+      console.log('Error at updateUserFullname function in work.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async findForCalendar(): Promise<Work[]> {
-    return await this.workModel
-      .find({ status: 'pending' })
-      .sort({ deadline: 'asc' });
+    try {
+      return await this.workModel
+        .find({ status: 'pending' })
+        .sort({ deadline: 'asc' });
+    } catch (e) {
+      console.log('Error at findForCalendar function in work.service');
+      console.log(e);
+      throw e;
+    }
   }
 }

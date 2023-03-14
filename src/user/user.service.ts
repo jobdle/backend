@@ -20,16 +20,34 @@ export class UserService {
   ) {}
 
   async findById(id: string): Promise<any> {
-    return await this.userModel.findOne({ _id: id });
+    try {
+      return await this.userModel.findOne({ _id: id });
+    } catch (e) {
+      console.log('Error at findById function in user.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async findByEmail(email: string): Promise<any> {
-    return await this.userModel.findOne({ email: email });
+    try {
+      return await this.userModel.findOne({ email: email });
+    } catch (e) {
+      console.log('Error at findByEmail function in user.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async genHashPassword(password: string): Promise<string> {
-    const saltOrRounds = await Number(process.env.SALTHASH);
-    return await bcrypt.hash(password, saltOrRounds);
+    try {
+      const saltOrRounds = await Number(process.env.SALTHASH);
+      return await bcrypt.hash(password, saltOrRounds);
+    } catch (e) {
+      console.log('Error at genHashPassword function in user.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async createUserAccount(data: UserDto): Promise<ResponseMessage> {
@@ -64,29 +82,49 @@ export class UserService {
   }
 
   async getOneUserData(userId: string): Promise<any> {
-    const user = await this.userModel.findOne({ _id: userId });
-    return user;
+    try {
+      const user = await this.userModel.findOne({ _id: userId });
+      return user;
+    } catch (e) {
+      console.log('Error at getOneUserData function in user.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async getAll(): Promise<any> {
-    const user = await this.userModel.find();
-    return user;
+    try {
+      const user = await this.userModel.find();
+      return user;
+    } catch (e) {
+      console.log('Error at getAll function in user.service');
+      console.log(e);
+      throw e;
+    }
   }
 
   async getAndUpdateFullname(id: string, body: any) {
-    if (body.firstname && body.lastname) {
-      body['fullname'] = (await body.firstname) + ' ' + (await body.lastname);
-    } else {
-      const user = await this.findById(id);
-      if (body.fristname) {
-        body['fullname'] = (await body.firstname) + ' ' + (await user.lastname);
+    try {
+      if (body.firstname && body.lastname) {
+        body['fullname'] = (await body.firstname) + ' ' + (await body.lastname);
       } else {
-        body['fullname'] = (await user.firstname) + ' ' + (await body.lastname);
+        const user = await this.findById(id);
+        if (body.fristname) {
+          body['fullname'] =
+            (await body.firstname) + ' ' + (await user.lastname);
+        } else {
+          body['fullname'] =
+            (await user.firstname) + ' ' + (await body.lastname);
+        }
       }
+      this.chatroomService.updateUserFullname(id, await body.fullname);
+      this.workService.updateUserFullname(id, await body.fullname);
+      return await body;
+    } catch (e) {
+      console.log('Error at getAndUpdateFullname function in user.service');
+      console.log(e);
+      throw e;
     }
-    this.chatroomService.updateUserFullname(id, await body.fullname);
-    this.workService.updateUserFullname(id, await body.fullname);
-    return await body;
   }
 
   async updateOneUserData(id: string, body: any): Promise<ResponseMessage> {
@@ -104,16 +142,24 @@ export class UserService {
   }
 
   async checkUserVerifyEmailAndSend(email: string): Promise<ResponseMessage> {
-    const user = await this.userModel.findOne({ email: email });
-    const check = await user.verifyEmail;
-    if (check == 1) {
-      return { message: 'verify email successfully.' };
-    } else {
-      return await this.mailService.sendVerifyEmail(
-        email,
-        await user.fullname,
-        await user.id,
+    try {
+      const user = await this.userModel.findOne({ email: email });
+      const check = await user.verifyEmail;
+      if (check == 1) {
+        return { message: 'verify email successfully.' };
+      } else {
+        return await this.mailService.sendVerifyEmail(
+          email,
+          await user.fullname,
+          await user.id,
+        );
+      }
+    } catch (e) {
+      console.log(
+        'Error at checkUserVerifyEmailAndSend function in user.service',
       );
+      console.log(e);
+      throw e;
     }
   }
 
