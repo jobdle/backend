@@ -17,6 +17,7 @@ Create a .env file in the root of your project and insert your key/value pairs i
 | EMAIL_PASS                | password of EMAIL                                                                                         |
 | JWT_EMAIL_KEY             | some string                                                                                  |
 | APP_NAME                  | website name                                                                              |
+| PUBLIC_CLIENT_URL         | main path url of client  |
 | SALTHASH                  | some number                                                                 |
 
 # 4.Run project by "yarn start"
