@@ -22,9 +22,6 @@ export class Employee {
   email: string;
 
   @Prop()
-  age: number;
-
-  @Prop()
   gender: string;
 
   @Prop([WorkDoneDto])
